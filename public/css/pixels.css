@@ -1,0 +1,239 @@
+body {
+  font-family: Pixelify Sans;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+.bg_img {
+  position: fixed;
+  width: 250%;
+  height: 250%;
+  top: 50%;
+  left: 50%;
+  z-index: -9999;
+  background-size: 550px;
+  background-position: -100px -100px;
+  background-image: url("https://ac.blooket.com/dashboard/assets/BlookCheckers-BykpA7vd.png");
+  transform: translate(-50%, -50%) rotate(15deg);
+  opacity: 0.1;
+}
+.navbar {
+  overflow: hidden;
+  background-color: #6f057a;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
+}
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  text-shadow: #000 1px 0 13px;
+  transition: transform 0.3s ease-in-out;
+}
+.navbar a:hover {
+  transform: rotate(360deg);
+}
+.title_p {
+  margin-left: 92%;
+  position: absolute;
+  top: 1%;
+  font-size: 26px;
+  color: #fff;
+  text-shadow: #000 1px 0 13px;
+}
+.container {
+  width: 50%;
+  background-color: #6f057a;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  border-radius: 5px;
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.pack {
+  margin-bottom: 20px;
+}
+
+.pack h2 {
+  margin-bottom: 10px;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.badge {
+  position: absolute;
+  top: 75%;
+  right: -0%;
+  background-color: #ffffff;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.item {
+  border-radius: 5px;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item img {
+  max-width: 90%;
+  max-height: 90%;
+  cursor: pointer;
+}
+.blook-details {
+  position: absolute;
+  top: 25%;
+  right: 10%;
+  background-color: #6f057a;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 400px;
+  height: 430px;
+}
+
+.blook-details h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.blook-details p {
+  margin: 5px 0;
+}
+
+.blook-details button {
+  margin-top: 10px;
+  font-family: Pixelify Sans;
+  padding: 12px 18px;
+  background-color: #8c099a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  transition: background-color 0.5s ease-in-out, box-shadow 0.3s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 18px;
+}
+
+.blook-details button:hover {
+    box-shadow: inset 0 -0.5vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #6f057a;
+  margin: 15% auto;
+  padding: 20px;
+  height: 300px;
+  width: 500px;
+  border-radius: 5px;
+  font-family: 'Pixelify Sans', sans-serif;
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#sell-quantity {
+  width: 215px;
+  padding: 5px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  position: absolute;
+  top: 70%;
+  right: 175%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pixel-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.pixel-info img {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+}
+
+.pixel-details p {
+  margin: 5px 0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 16px;
+}
+
+::-webkit-scrollbar {
+    width: 18px;
+}
+
+::-webkit-scrollbar-track {
+    background: #6f057a;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #8c099a;
+    border-radius: 10px;
+    border: 3px solid #6f057a;
+}

@@ -1,0 +1,302 @@
+if (localStorage.loggedin == "true") {
+  sessionStorage = localStorage;
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const userData = await fetchUserData();
+
+    if (userData) {
+        const userRole = userData.role;
+        const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
+        
+        if (allowedRoles.includes(userRole)) {
+            document.getElementById('wrench-icon').style.display = 'inline';
+        }
+    }
+});
+
+if (localStorage.loggedin == "true") {
+    sessionStorage = localStorage;
+}
+document.addEventListener('DOMContentLoaded', function () {
+    const instantOpenElement = document.getElementById("instantOpen");
+    const instantOpen = sessionStorage.getItem('instantOpen') === 'true';
+    instantOpenElement.textContent = `Instant Open: ${instantOpen ? 'true' : 'false'}`;
+    instantOpenElement.addEventListener('click', function () {
+        const newStatus = !instantOpen;
+        sessionStorage.setItem('instantOpen', newStatus);
+        instantOpenElement.textContent = `Instant Open: ${newStatus ? 'true' : 'false'}`;
+    });
+});
+
+async function fetchUserData() {
+    try {
+        const response = await fetch('/user');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        return null;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+  const usernameElement = document.getElementById("username");
+  const roleElement = document.getElementById("role");
+  const idElement = document.getElementById("id");
+  const uidElement = document.getElementById("uid");
+
+
+  const userData = await fetchUserData();
+
+  if (userData) {
+    if (usernameElement) {
+      usernameElement.textContent = `Username: ${userData.username}`;
+    }
+    if (roleElement) {
+      roleElement.textContent = `Role: ${userData.role}`;
+    }
+    if (idElement) {
+      idElement.textContent = `ID: ${userData.id}`;
+    }
+    if (uidElement) {
+      uidElement.textContent = `UID: ${userData.uid}`;
+    }
+  } else {
+    if (usernameElement) {
+      usernameElement.textContent = `Username: Unavailable`;
+    }
+    if (roleElement) {
+      roleElement.textContent = `Role: Unavailable`;
+    }
+    if (idElement) {
+      idElement.textContent = `ID: Unavailable`;
+    }
+    if (uidElement) {
+      uidElement.textContent = `UID: Unavailable`;
+    }
+  }
+});
+
+document.getElementById('changeUsername').addEventListener('click', function() {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background-color: #6f057a;
+        box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 26px;
+        width: 420px;
+    `;
+
+    const title = document.createElement('h2');
+    title.textContent = "Change Username";
+    modalContent.appendChild(title);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'New Username';
+    input.style.cssText = `
+    width: 60%;
+    height: 50px;
+    margin-bottom: 10px;
+    display: inline;
+    font-family: 'pixelify sans';
+    font-size: 28px;
+    text-align: center;
+    border: 3px solid #5e046e;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: white;
+    margin-right: 5px;
+    appearance: textfield;
+    -webkit-appearance: none;
+    `;
+
+    modalContent.appendChild(input);
+
+    
+    const br = document.createElement('br');
+    modalContent.appendChild(br);
+
+    const passwordInput = document.createElement('input');
+    passwordInput.type = 'password';
+    passwordInput.placeholder = 'Confirm Password';
+    passwordInput.style.cssText = `
+    width: 60%;
+    height: 50px;
+    margin-bottom: 10px;
+    display: inline;
+    font-family: 'pixelify sans';
+    font-size: 28px;
+    text-align: center;
+    border: 3px solid #5e046e;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: white;
+    margin-right: 5px;
+    appearance: textfield;
+    -webkit-appearance: none;
+    `;
+    modalContent.appendChild(passwordInput); 
+
+    
+    const br2 = document.createElement('br');
+    modalContent.appendChild(br2);
+
+    
+    const warningText = document.createElement('p');
+    warningText.innerHTML = "Warning: If you change your username, someone else can snipe your old username.";
+    warningText.style.cssText = `
+        color: red;
+        font-size: 16px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    `;
+    modalContent.appendChild(warningText);
+    
+    const changeButton = document.createElement('button');
+    changeButton.textContent = 'Change';
+    changeButton.style.cssText = `
+        background-color: green;
+        box-shadow: inset 0 -0.365vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6);
+        font-family: 'pixelify sans';
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: box-shadow 0.3s ease;
+        margin-right: 60px;
+    `;
+
+    changeButton.onmouseover = () => {
+        changeButton.style.boxShadow = 'inset 0 -0.5vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+
+    changeButton.onmouseout = () => {
+        changeButton.style.boxShadow = 'inset 0 -0.365vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+    modalContent.appendChild(changeButton);
+
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.style.cssText = `
+        background-color: red;
+        box-shadow: inset 0 -0.365vw #b30000, 3px 3px 15px rgba(0, 0, 0, 0.6);
+        font-family: 'pixelify sans';
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: box-shadow 0.3s ease;
+        margin-left: 60px;
+    `;
+
+    cancelButton.onmouseover = () => {
+        cancelButton.style.boxShadow = 'inset 0 -0.5vw #b30000, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+
+    cancelButton.onmouseout = () => {
+        cancelButton.style.boxShadow = 'inset 0 -0.365vw #b30000, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+    modalContent.appendChild(cancelButton);
+
+
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    cancelButton.onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    changeButton.onclick = async () => {
+        const newUsername = input.value;
+        const password = passwordInput.value;
+        const forbiddenChars = /[^a-zA-Z0-9_]/;
+        if (!newUsername || !password) {
+            alert("Please fill out all fields.");
+            return;
+        }
+        if (forbiddenChars.test(newUsername) || newUsername.length < 3 || newUsername.length > 20) {
+            alert("Username must be 3-20 characters long and contain only letters, numbers, and underscores.");
+            return;
+        }
+
+      const response = await fetch('/changeUsername', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ newUsername, password })
+      });;
+
+        
+        const res = await response.status;
+        if (res == 400) {
+          alert("Username already exists");
+          return;
+        }
+
+        if (response.ok) {
+            window.location.href = '/login.html';
+        } else {
+            const errorText = await response.text();
+            alert(`Error: ${errorText}`);
+        }
+    };
+
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            document.body.removeChild(modal);
+        }
+    });
+});
+
+const today = new Date();
+const dateOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+};
+date.innerHTML = today.toLocaleDateString("en-US", dateOptions);
+
+function logout() {
+  fetch('/logout', { method: 'POST' })
+    .then(response => {
+      if (response.ok) {
+        sessionStorage.clear();
+        localStorage.removeItem('loggedIn');
+        window.location.href = '/index.html';
+      } else {
+        console.error('Logout failed');
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}

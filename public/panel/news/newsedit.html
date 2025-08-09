@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="../enc/enc.css" rel="stylesheet" />
+    <link rel="stylesheet" href="newsedit.css">
+    <link rel="icon" type="image/png" href="../../img/favicon.ico" />
+    <title>News Editor</title>
+  </head>
+  <body style="background-color: #6d0180;">
+    <div class="overlay-container" id="overlay">
+      <div class="overlay-content">
+        Verifying Connection...
+        <div class="loader" style="display: inline-block"></div>
+      </div>
+    </div>
+    <img alt="Blooks Background" class="bg_img" />
+      <div class="navbar">
+        <div class="dropdown">
+          </button>
+          <div > 
+          <div> 
+            <a href="../../dashboard.html"><i class="fa-solid fa-chart-column"></i></a>
+            <a href="../enc/enc.html"><i class="fa-solid fa-wrench"></i></a>
+            <a href="../ownerPanelPage/owner.html"><i class="fa-solid fa-code"></i></a>
+            <a href="/index.html" onclick="sessionStorage.clear(); location.reload();"><i class="fa-solid fa-right-from-bracket"></i></a>
+          </div>
+          </div> 
+      </div>
+      <div class="title_p" id="title_p">Pixelit</div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+  <body>
+    <form onsubmit="postnews(event)">
+      <label for="title">Title</label>
+      <input type="text" id="title" required /><br />
+      <label for="content">Content</label>
+      <textarea id="content" required></textarea><br />
+      <div id="succes-message""></div>
+      <h3>Author <span id="username"></span></h3>
+      <h3>Date <span id="date"></span></h3>
+      <input type="submit" value="Post" />
+    </form>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="../../api/verifyenc.js"></script>
+    <script src="./newsedit.js"></script>
+    <script src="/api/verifyOwner.js"></script>
+  </body>
+</html>
