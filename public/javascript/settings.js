@@ -59,9 +59,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (roleElement) {
       roleElement.textContent = `Role: ${userData.role}`;
     }
-    if (idElement) {
-      idElement.textContent = `ID: ${userData.id}`;
-    }
     if (uidElement) {
       uidElement.textContent = `UID: ${userData.uid}`;
     }
@@ -71,9 +68,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     if (roleElement) {
       roleElement.textContent = `Role: Unavailable`;
-    }
-    if (idElement) {
-      idElement.textContent = `ID: Unavailable`;
     }
     if (uidElement) {
       uidElement.textContent = `UID: Unavailable`;

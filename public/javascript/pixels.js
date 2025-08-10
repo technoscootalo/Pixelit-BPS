@@ -488,12 +488,12 @@ function changeProfilePicture(blookName, imageUrl, packName) {
         document.body.removeChild(modal);
         window.location.href = '/dashboard.html'; 
       } else {
-        alert(data.message || "Failed to change profile picture. Please try again.");
+        window.location.href = '/dashboard.html?error=' + encodeURIComponent(data.message || "Failed to change profile picture.");
       }
     })
     .catch(error => {
       console.error("Error changing profile picture:", error);
-      alert("An error occurred while changing the profile picture. Please try again.");
+      window.location.href = '/dashboard.html?error=' + encodeURIComponent("An error occurred while changing the profile picture. Please try again.");
       document.body.removeChild(modal);
     });
   };

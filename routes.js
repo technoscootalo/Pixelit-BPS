@@ -358,7 +358,6 @@ router.get("/packs", async (req, res) => {
     res.status(500).send("You must be logged in to access this page.");
     return;
   }
-  //await client.connect();
   const db = client.db(db_name);
   const collection = db.collection("packs");
   const packs = await collection.find().toArray();
@@ -396,6 +395,7 @@ router.post("/addPack", async (req, res) => {
     name: pack.name,
     image: pack.image,
     cost: pack.cost,
+    visible: true,
     blooks: [],
   };
   try {
@@ -422,7 +422,7 @@ router.post("/addPack", async (req, res) => {
     console.log(e);
   }
   console.log("added new pack: " + newpack.name);
-  const packs2 = await packs.find().toArray();
+  const packs2 = await packs.find({ visible: true }).toArray();
   res.status(200).send({ packs: packs2 });
 });
 

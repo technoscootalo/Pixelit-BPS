@@ -63,6 +63,7 @@ function createPack() {
                 name: packName,
                 image: packUrl,
                 cost: packCost,
+                visible: true,
             }),
         })
             .then((response) => {

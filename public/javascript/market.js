@@ -28,7 +28,8 @@ async function fetchPacks() {
   try {
     const response = await fetch('/packs');
     const packs = await response.json();
-    displayPacks(packs);
+    const visiblePacks = packs.filter(pack => pack.visible)
+    displayPacks(visiblePacks);
   } catch (error) {
     console.error('Error fetching packs:', error);
   }
