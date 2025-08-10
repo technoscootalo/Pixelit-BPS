@@ -159,7 +159,8 @@ document.getElementById('changeUsername').addEventListener('click', function() {
     modalContent.appendChild(br2);
 
     
-    const warningText = document.createElement('p');
+    const warningText = document.createElement('div');
+    warningText.id = 'error-message';
     warningText.innerHTML = "Warning: If you change your username, someone else can snipe your old username.";
     warningText.style.cssText = `
         color: red;
@@ -233,11 +234,17 @@ document.getElementById('changeUsername').addEventListener('click', function() {
         const password = passwordInput.value;
         const forbiddenChars = /[^a-zA-Z0-9_]/;
         if (!newUsername || !password) {
-            alert("Please fill out all fields.");
+            document.getElementById('error-message').textContent = "Please fill out all fields.";
+            setTimeout(() => {
+                document.getElementById('error-message').textContent = "Warning: If you change your username, someone else can snipe your old username.";
+            }, 2000);
             return;
         }
         if (forbiddenChars.test(newUsername) || newUsername.length < 3 || newUsername.length > 20) {
-            alert("Username must be 3-20 characters long and contain only letters, numbers, and underscores.");
+            document.getElementById('error-message').textContent = "Username must be 3-20 characters long and contain only letters, numbers, and underscores.";
+            setTimeout(() => {
+                document.getElementById('error-message').textContent = "Warning: If you change your username, someone else can snipe your old username.";
+            }, 2000);
             return;
         }
 
@@ -252,7 +259,10 @@ document.getElementById('changeUsername').addEventListener('click', function() {
         
         const res = await response.status;
         if (res == 400) {
-          alert("Username already exists");
+          document.getElementById('error-message').textContent = "Username already exists";
+          setTimeout(() => {
+                document.getElementById('error-message').textContent = "Warning: If you change your username, someone else can snipe your old username.";
+            }, 2000);
           return;
         }
 
@@ -260,7 +270,7 @@ document.getElementById('changeUsername').addEventListener('click', function() {
             window.location.href = '/login.html';
         } else {
             const errorText = await response.text();
-            alert(`Error: ${errorText}`);
+            document.getElementById('error-message').textContent = `Error: ${errorText}`;
         }
     };
 

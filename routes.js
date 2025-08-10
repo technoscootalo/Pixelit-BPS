@@ -487,6 +487,7 @@ router.post("/addBlook", async (req, res) => {
               parent: blook.parent,
               color: blook.color,
               owned: 0,
+              visible: true,
             },
           },
         },
@@ -671,7 +672,6 @@ router.post("/sellBlook", async (req, res) => {
 
 router.get("/user", async (req, res) => {
   const session = req.session;
-  //console.log(session)
   if (session.loggedIn) {
     try {
       const user = await users.findOne({ username: session.username });
@@ -703,60 +703,70 @@ router.get("/packs", async (req, res) => {
 });
 
 router.get("/openPack", packOpenLimiter, async (req, res) => {
-  const session = req.session;
-  if (session && session.loggedIn) {
-    const user = { name: session.username };
-    const packName = req.query.pack;
-    try {
-      const person = await users.findOne({ username: user.name });
-      const pack = await packs.findOne({ name: packName });
-      if (!person || !pack) {
-        return res.status(404).json({ error: "User or pack not found" });
-      }
-      if (person.tokens < pack.cost) {
-        return res.status(400).json({ error: "Not enough tokens" });
-      }
+    const session = req.session;
+    if (session && session.loggedIn) {
+        const user = { name: session.username };
+        const packName = req.query.pack;
 
-      const blooks = pack.blooks;
-      let totalChance = blooks.reduce((sum, blook) => sum + Number(blook.chance), 0);
-      const randNum = rand(0, totalChance);
-      let currentChance = 0;
-      let selectedBlook;
-      for (const blook of blooks) {
-        if (randNum >= currentChance && randNum <= currentChance + Number(blook.chance)) {
-          selectedBlook = blook;
-          break;
+        try {
+            const person = await users.findOne({ username: user.name });
+            const pack = await packs.findOne({ name: packName });
+
+            if (!person || !pack) {
+                return res.status(404).json({ error: "User or pack not found" });
+            }
+            if (person.tokens < pack.cost) {
+                return res.status(400).json({ error: "Not enough tokens" });
+            }
+
+            const blooks = pack.blooks.filter(blook => blook.visible === true); 
+
+            let totalChance = blooks.reduce((sum, blook) => sum + Number(blook.chance), 0);
+            if (totalChance === 0) {
+                return res.status(500).json({ error: "No blooks available to select from" });
+            }
+
+            const randNum = rand(0, totalChance);
+            let currentChance = 0;
+            let selectedBlook;
+
+            for (const blook of blooks) {
+                if (randNum >= currentChance && randNum < currentChance + Number(blook.chance)) {
+                    selectedBlook = blook;
+                    break;
+                }
+                currentChance += Number(blook.chance);
+            }
+
+            if (!selectedBlook) {
+                return res.status(500).json({ error: "Failed to select a blook" });
+            }
+
+            await users.updateOne(
+                { username: user.name },
+                {
+                    $inc: { 
+                        tokens: -pack.cost,
+                        [`packs.$[pack].blooks.$[blook].owned`]: 1,
+                        packsOpened: 1
+                    }
+                },
+                {
+                    arrayFilters: [
+                        { "pack.name": pack.name },
+                        { "blook.name": selectedBlook.name }
+                    ]
+                }
+            );
+            res.status(200).json({ pack: pack.name, blook: selectedBlook });
+            console.log(`${user.name} opened ${pack.name} and got ${selectedBlook.name}`);
+        } catch (error) {
+            console.error("Error opening pack:", error);
+            res.status(500).json({ error: "Internal server error" });
         }
-        currentChance += Number(blook.chance);
-      }
-      if (!selectedBlook) {
-        return res.status(500).json({ error: "Failed to select a blook" });
-      }
-      await users.updateOne(
-        { username: user.name },
-        {
-          $inc: { 
-            tokens: -pack.cost,
-            [`packs.$[pack].blooks.$[blook].owned`]: 1,
-            packsOpened: 1
-          }
-        },
-        {
-          arrayFilters: [
-            { "pack.name": pack.name },
-            { "blook.name": selectedBlook.name }
-          ]
-        }
-      );
-      res.status(200).json({ pack: pack.name, blook: selectedBlook });
-      console.log(`${user.name} opened ${pack.name} and got ${selectedBlook.name}`);
-    } catch (error) {
-      console.error("Error opening pack:", error);
-      res.status(500).json({ error: "Internal server error" });
+    } else {
+        res.status(401).json({ error: "Unauthorized" });
     }
-  } else {
-    res.status(401).json({ error: "Unauthorized" });
-  }
 });
 
 router.post("/muteBanUser", async (req, res) => {
@@ -894,6 +904,20 @@ router.post("/changeUsername", async (req, res) => {
     } else {
         res.status(401).send("Incorrect password.");
     }
+});
+
+router.get("/allUsers", async (req, res) => {
+  try {
+    const allUsers = await users.find().toArray();
+    allUsers.forEach(user => {
+      delete user.password; 
+      delete user.salt;    
+    });
+    res.status(200).json(allUsers);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send("Error fetching users");
+  }
 });
 
 module.exports = router;

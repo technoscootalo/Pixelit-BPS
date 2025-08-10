@@ -130,10 +130,11 @@ function updateTokens() {
   socket.emit("getTokens", sessionStorage.username);
 }
 
-socket.on("tokens", (tokensr, sentr, packsOpenedr) => {
-  document.getElementById('tokens').textContent = formatNumber(tokensr);
-  document.getElementById('messages').textContent = formatNumber(sentr);
-  document.getElementById('packs').textContent = formatNumber(packsOpenedr);
+socket.on("tokens", (tokensr, sentr, messagesCount) => { 
+    document.getElementById('tokens').textContent = formatNumber(tokensr);
+    document.getElementById('messages').textContent = formatNumber(sentr);
+    const messagesElement = document.getElementById('messages');
+    messagesElement.textContent = formatNumber(messagesCount); 
 });
 
 function formatNumber(num) {

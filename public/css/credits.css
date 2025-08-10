@@ -126,11 +126,11 @@ body {
   width: 30px;
   height: 30px;
   margin-right: 10px;
-  animation: slowAnimation 20s infinite;
+  animation: slowAnimation 2000s infinite;
 }
 .credits-container img {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 5px;
 }
 .credits-container h4 {

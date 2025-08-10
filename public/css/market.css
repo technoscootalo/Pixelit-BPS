@@ -90,6 +90,31 @@ body {
   left: 0;
 }
 
+.rarityButton {
+  position: fixed;
+  color: white;
+  width: 100px;
+  height: 50px;
+  bottom: 13%;
+  left: 50%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transform: translateX(-50%);
+  background-color: #6f057a;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  font-family: Pixelify Sans;
+}
+
+.rarityButton:hover {
+  transition: box-shadow 0.3s ease-in-out;
+  box-shadow: inset 0 -0.5vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+}
+
+.rarityButton {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
 .resultBox {
   height: 210px;
   width: 210px;
@@ -102,6 +127,21 @@ body {
   justify-content: center;
   cursor: pointer;
   background: radial-gradient(circle, #581060, #6f057a);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #6f057a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8c099a;
+  border-radius: 10px;
+  border: 3px solid #6f057a;
 }
 
 .resultBox img {

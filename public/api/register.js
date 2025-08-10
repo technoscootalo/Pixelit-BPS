@@ -16,9 +16,19 @@ function register(event) {
   const forbiddenChars = /[^a-zA-Z0-9_]/;
   if (forbiddenChars.test(username.value) || username.value.length < 3 || username.value.length > 20) {
     ge('error-message').textContent = 'Username must be 3-20 characters long and contain only letters, numbers, and underscores.';
+    ge('error-message').style.color = 'red';
+    setTimeout(() => { ge('error-message').style.color = ''; }, 2000);
     return;
   }
 
+  const passwordForbiddenChars = /[.\/\;\'\`\+\-]/;
+    if (password.value.length <= 8 || passwordForbiddenChars.test(password.value)) {
+    ge('error-message').textContent = 'Password must be at least 8 characters long and cannot contain invalid characters.';
+    ge('error-message').style.color = 'red';
+    setTimeout(() => { ge('error-message').style.color = ''; }, 2000);
+    return;
+  }
+  
   const requestBody = {
     username: username.value,
     password: password.value,
@@ -38,9 +48,11 @@ function register(event) {
     if (response.status === 200) {
       ge('error-message').textContent = 'The request has been sent to the admins. Please wait for them to review your form. May take up to 12 hours.';
       ge('error-message').style.color = 'lightgreen';
+      setTimeout(() => { ge('error-message').style.color = ''; ge('error-message').textContent = ''; }, 2000);
     } else if (response.status === 500) {
       return response.text().then(text => {
         ge('error-message').textContent = text;
+        setTimeout(() => { ge('error-message').style.color = ''; ge('error-message').textContent = ''; }, 2000);
       });
     } else if (response.status === 502) {
       ge('error-message').textContent = 'Bad Gateway. The server is temporarily unresponsive. This may be due to maintenance or server issues.';

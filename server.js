@@ -151,16 +151,15 @@ io.on("connection", (socket) => {
               };
 
             await chatm.insertOne(chatmessage);
-              const updatedSentCount = user.sent + 1;
-              const updatedTokensCount = user.tokens + 1;
-              await users.updateOne(
-                  { username: name },
-                  { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
-              );
-
-
-              io.emit("chatupdate", "get");
-              console.log("message sent");
+            const updatedSentCount = user.sent + 1;
+            const updatedTokensCount = user.tokens + 1;
+            await users.updateOne(
+                { username: username },
+                { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
+            );
+            const updatedMessageCount = await chatm.countDocuments();
+            io.emit("tokens", user.tokens, updatedSentCount, updatedMessageCount);
+            console.log("message sent");
           } else {
               socket.emit("error", response.data);
           }
@@ -174,20 +173,32 @@ io.on("connection", (socket) => {
     socket.emit("chatupdate", messages);
   });
   socket.on("message", async (message) => {
-    const username = message.sender;
-    const user = await users.findOne({ username: username });
-    if (user.muted) {
-        return socket.emit("error", "User is muted.");
-    }
-    const chatmessage = {
-        sender: username,
-        msg: message.msg,
-        badges: user.badges,
-        pfp: user.pfp,
-    };
-    await chatm.insertOne(chatmessage);
-    io.emit("chatupdate", "get"); 
-    console.log("message sent");
+      const username = message.sender;
+      const user = await users.findOne({ username: username });
+      if (user.muted) {
+          return socket.emit("error", "User is muted.");
+      }
+
+      const chatmessage = {
+          sender: username,
+          msg: message.msg,
+          badges: user.badges,
+          pfp: user.pfp,
+      };
+
+      await chatm.insertOne(chatmessage);
+
+      const updatedSentCount = user.sent + 1;
+      const updatedTokensCount = user.tokens + 1;
+
+      await users.updateOne(
+          { username: username },
+          { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
+      );
+
+      const updatedMessageCount = await chatm.countDocuments(); 
+      io.emit("tokens", user.tokens, updatedSentCount, updatedMessageCount); 
+      console.log("Message sent");
   });
   
   socket.on("getNews", async () => {

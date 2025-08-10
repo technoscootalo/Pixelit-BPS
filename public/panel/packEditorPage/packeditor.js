@@ -163,6 +163,7 @@ function addBlook(packDiv, packName) {
                     parent: packName,
                     owned: 0,
                     color: blookColor,
+                    visible: true,
                 }),
             }).then((response) => {
                 if (response.ok) {
