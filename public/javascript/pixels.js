@@ -23,6 +23,14 @@ const RARITY_VALUES = {
   chroma: 300 
 };
 
+function refreshPackDisplay() {
+    fetchJSON("/user")
+        .then(data => {
+            generatePacksHTML(data.packs); 
+        })
+        .catch(error => console.error("Error fetching updated user data:", error));
+}
+
 function getRaritySpan(rarity) {
   const color = RARITY_COLORS[rarity.toLowerCase()] || "black";
   return `<span style='color: ${color};'>${rarity.charAt(0).toUpperCase() + rarity.slice(1)}</span>`;
@@ -40,6 +48,8 @@ function fetchJSON(url, options = {}) {
     return response.json();
   });
 }
+
+
 
 function updateBlookInfo(blook, packName) {
   const { name = "Unknown Blook", imageUrl, rarity = "Unknown", owned = 0 } = blook;
@@ -98,6 +108,9 @@ function generatePacksHTML(packsData) {
         const img = document.createElement("img");
         img.src = `${blook.imageUrl}`;
         img.alt = blook.name;
+        img.onerror = function() {
+            this.src = 'https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';
+        };
         itemDiv.appendChild(img);
 
         const badge = document.createElement("div");

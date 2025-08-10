@@ -49,6 +49,31 @@ function createPackElement(pack) {
   divBox.className = 'box';
   divBox.setAttribute('data-pack-name', pack.name);
 
+  if (pack.name === "OG Pack") {
+    divBox.style.background = "radial-gradient(circle, #ADD8E6, #335494)";
+    divBox.style.boxShadow = "inset 0 -0.365vw #335494, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+
+  if (pack.name === "Color Pack") {
+    divBox.style.background = "radial-gradient(circle, #FFFF00, #8B8000)";
+    divBox.style.boxShadow = "inset 0 -0.365vw #8B8000, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+
+  if (pack.name === "School Pack") {
+    divBox.style.background = "radial-gradient(circle, #DEB887, #8B4513)";
+    divBox.style.boxShadow = "inset 0 -0.365vw #8B4513, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+
+  if (pack.name === "Halloween Pack") {
+    divBox.style.background = "radial-gradient(circle, #39272d, #67433e)";
+    divBox.style.boxShadow = "inset 0 -0.365vw #39272d, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+  
+  if (pack.name === "Space Pack") {
+    divBox.style.background = "radial-gradient(circle, #808080, #00008B)";
+    divBox.style.boxShadow = "inset 0 -0.365vw #00008B, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+  
   const packImage = document.createElement('img');
   packImage.src = `${pack.image}`;
   packImage.alt = pack.name;
@@ -142,9 +167,11 @@ async function openPack(packName, packCost) {
 }
 
 function showPackContents(result) {
+  
   console.log("Pack contents:", result);
 
   const blook = result.blook || result;
+  const packName = blook.packName;
 
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
@@ -156,19 +183,42 @@ function showPackContents(result) {
   overlay.style.zIndex = '999';
 
   const modal = document.createElement('div');
-  modal.className = 'box';
+  modal.className = 'resultBox';
   modal.style.position = 'fixed';
   modal.style.top = '50%';
   modal.style.left = '50%';
   modal.style.transform = 'translate(-50%, -50%)';
   modal.style.zIndex = '1000';
   modal.style.textAlign = 'center';
+  modal.style.height = '210px';
+  modal.style.width = '210px';
 
+  if (packName === "OG Pack") {
+    modal.style.background = "radial-gradient(circle, #ADD8E6, #335494)";
+    modal.style.boxShadow = "inset 0 -0.365vw #335494, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  } 
+  if (packName === "Color Pack") {
+    modal.style.background = "radial-gradient(circle, #FFFF00, #8B8000)";
+    modal.style.boxShadow = "inset 0 -0.365vw #8B8000, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  } 
+  if (packName === "School Pack") {
+    modal.style.background = "radial-gradient(circle, #DEB887, #8B4513)";
+    modal.style.boxShadow = "inset 0 -0.365vw #8B4513, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  } 
+  if (packName === "Halloween Pack") {
+    modal.style.background = "radial-gradient(circle, #39272d, #67433e)";
+    modal.style.boxShadow = "inset 0 -0.365vw #39272d, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  } 
+  if (packName === "Space Pack") {
+    modal.style.background = "radial-gradient(circle, #808080, #00008B)";
+    modal.style.boxShadow = "inset 0 -0.365vw #00008B, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+  
   const blookImage = document.createElement('img');
   blookImage.src = `${blook.imageUrl}`;
   blookImage.alt = blook.name || 'Unknown Blook';
-  blookImage.style.width = '130px';
-  blookImage.style.height = '130px';
+  blookImage.style.width = '100px';
+  blookImage.style.height = '100px';
   blookImage.style.borderRadius = '5px';
   blookImage.onerror = function() {
     console.error("Failed to load image:", this.src);

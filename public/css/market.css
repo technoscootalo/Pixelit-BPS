@@ -53,16 +53,20 @@ body {
 }
 
 .box {
-  height: 285px;
-  width: 250px;
+  height: 210px;
+  width: 210px;
   border-radius: 5px;
-  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   padding: 20px;
   display: flex;
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   background: radial-gradient(circle, #581060, #6f057a);
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  text-align: center;
 }
 
 .box:hover {
@@ -86,25 +90,33 @@ body {
   left: 0;
 }
 
-.box {
+.resultBox {
+  height: 210px;
+  width: 210px;
+  border-radius: 5px;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  width: 200px;
-  height: 260px; 
-  margin: 10px;
-  text-align: center;
+  cursor: pointer;
+  background: radial-gradient(circle, #581060, #6f057a);
 }
 
-.box img {
+.resultBox img {
   max-width: 100%;
   height: auto;
 }
 
-.box p {
+.resultBox p {
   margin: 5px 0;
+}
+
+.packContainer {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: flex-start;
 }
 
 #animationCanvas {

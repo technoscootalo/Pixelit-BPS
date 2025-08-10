@@ -1,31 +1,27 @@
 function createPack() {
-    var packName = document.getElementById("packName").value; 
-    var packUrl = document.getElementById("packUrl").value; 
-    var packCost = document.getElementById("packCost").value; 
-    if (packName) {
-        var packDiv = document.createElement("div");
+    const packName = document.getElementById("packName").value; 
+    const packUrl = document.getElementById("packUrl").value; 
+    const packCost = document.getElementById("packCost").value; 
+    if (packName && packUrl && packCost) {
+        const packDiv = document.createElement("div");
         packDiv.classList.add("pack");
-
-        var packHeader = document.createElement("h2");
+        const packHeader = document.createElement("h2");
         packHeader.textContent = packName + " - $" + packCost;
         packDiv.appendChild(packHeader);
-
-        var packImg = document.createElement("img");
+        const packImg = document.createElement("img");
         packImg.src = packUrl;
         packImg.alt = packName;
         packImg.style.width = "100px";
         packImg.style.height = "auto"; 
         packDiv.appendChild(packImg);
-
-        var addBlookButton = document.createElement("button");
+        const addBlookButton = document.createElement("button");
         addBlookButton.textContent = "Add Blook";
         addBlookButton.classList.add("button"); 
         addBlookButton.onclick = function () {
             addBlook(packDiv);
         };
-        addBlook(packDiv, packName);
-
-        var removePackButton = document.createElement("button");
+        packDiv.appendChild(addBlookButton);
+        const removePackButton = document.createElement("button");
         removePackButton.textContent = "Remove Pack";
         removePackButton.classList.add("button"); 
         removePackButton.onclick = function () {
@@ -35,25 +31,17 @@ function createPack() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name: pack.name,
+                    name: packName,
                 }),
             })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        console.log(response.statusText);
-                    }
-                })
-                .then((data) => {
-                    renderPacks(data.packs);
-                });
-            packDiv.parentNode.removeChild(packDiv);
+            .then((response) => {
+                if (response.ok) {
+                    packDiv.parentNode.removeChild(packDiv);
+                }
+            });
         };
         packDiv.appendChild(removePackButton);
-
-        document.getElementById("packs").appendChild(packDiv);
-
+        document.getElementById("packs").appendChild(packDiv); 
         fetch("/addPack", {
             method: "POST",
             headers: {
@@ -66,21 +54,16 @@ function createPack() {
                 visible: true,
             }),
         })
-            .then((response) => {
-                if (response.ok) {
-                    console.log(response);
-                    console.log("Pack added successfully");
-                } else {
-                    console.log(response.statusText);
-                }
-            })
-            .then((data) => {
-                renderPacks(data.packs);
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-        console.log("Added pack");
+        .then((response) => {
+            if (response.ok) {
+                refreshPackDisplay(); 
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    } else {
+        console.error("Please fill in all fields to create a pack.");
     }
 }
 
