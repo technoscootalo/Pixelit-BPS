@@ -80,58 +80,56 @@ function showModal(message) {
 }
 
 function addSpinClickListener() {
-  const spinButton = document.getElementById('spin');
-  const tokensDisplay = document.getElementById('tokens');
-  const EIGHT_HOURS = 8 * 60 * 60 * 1000; 
-  
-  let lastSpinTime = parseInt(sessionStorage.getItem('lastSpinTime')) || 0;
-  if (sessionStorage.getItem('spinButtonHidden') === 'true') {
-    spinButton.style.display = 'none';
-  }
-  
-  spinButton.addEventListener('click', async () => {
-    const currentTime = Date.now();
-    if (currentTime - lastSpinTime < EIGHT_HOURS) {
-      showModal('You can only claim tokens every 8 hours.');
-      return;
+    const spinButton = document.getElementById('spin');
+    const tokensDisplay = document.getElementById('tokens');
+    const EIGHT_HOURS = 8 * 3600000; // 8 hours in milliseconds 
+
+    let lastSpinTime = parseInt(sessionStorage.getItem('lastSpinTime')) || 0;
+    if (sessionStorage.getItem('spinButtonHidden') === 'true') {
+        spinButton.style.display = 'none';
     }
-    spinButton.disabled = true;
 
-    try {
-      const userResponse = await fetch('/user');
-      const userData = await userResponse.json();
-      if (userData.claimed) {
-          showModal('Tokens have already been claimed. Please wait for the next 8 hours.');
-          return;
-      }
+    spinButton.addEventListener('click', async () => {
+        const currentTime = Date.now();
+        if (currentTime - lastSpinTime < EIGHT_HOURS) {
+            showModal('You can only claim tokens every 8 hours.');
+            return;
+        }
+        spinButton.disabled = true;
 
-      const spinResponse = await fetch('/spin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({})
-      });
+        try {
+            const userResponse = await fetch('/user');
+            const userData = await userResponse.json();
+            if (userData.claimed) {
+                showModal('Tokens have already been claimed. Please wait for the next 8 hours.');
+                return;
+            }
 
-      const data = await spinResponse.json();
-      if (data.message === "Spin successful") {
-          const newTokens = parseInt(tokensDisplay.textContent) + data.tokensWon;
-          tokensDisplay.textContent = newTokens;
-          showModal('Congratulations! You won ' + data.tokensWon + ' tokens!');
-          sessionStorage.setItem('spinButtonHidden', 'true');
-          spinButton.style.display = 'none'; 
-          setTimeout(() => {
-              sessionStorage.removeItem('spinButtonHidden'); 
-              spinButton.style.display = 'inline-block'; 
-          }, EIGHT_HOURS);
-      } else {
-          showModal('Error: ' + data.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      showModal('An error occurred while spinning.');
-    } finally {
-      spinButton.disabled = false;
-    }
-  });
+            const spinResponse = await fetch('/spin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+            const data = await spinResponse.json();
+            if (data.message === "Spin successful") {
+                const newTokens = parseInt(tokensDisplay.textContent) + data.tokensWon;
+                tokensDisplay.textContent = newTokens;
+                showModal('Congratulations! You won ' + data.tokensWon + ' tokens!');
+                sessionStorage.setItem('spinButtonHidden', 'true');
+                spinButton.style.display = 'none';
+                setTimeout(() => {
+                    sessionStorage.removeItem('spinButtonHidden');
+                }, EIGHT_HOURS);
+            } else {
+                showModal('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showModal('An error occurred while spinning.');
+        } finally {
+            spinButton.disabled = false;
+        }
+    });
 }
 
 addSpinClickListener();

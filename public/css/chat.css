@@ -147,6 +147,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0px;
+  scroll-height: 0%;
 }
 .usernameAndBadges{
   display: flex;

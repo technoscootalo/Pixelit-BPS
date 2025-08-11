@@ -576,8 +576,8 @@ router.post("/spin", async (req, res) => {
         }
 
         const now = Date.now();
-        if (user.claimed) {
-            return res.status(429).json({ message: "Tokens have already been claimed. Please wait for the next 8 hours." });
+        if (user.claimed && now - user.lastSpin < 8 * 3600000) { 
+          return res.status(429).json({ message: "Tokens have already been claimed. Please wait for   the next 8 hours." });
         }
 
         const tokensWonRandom = [500, 600, 700, 800, 900, 1000][Math.floor(Math.random() * 6)];
@@ -586,14 +586,8 @@ router.post("/spin", async (req, res) => {
             { username: session.username },
             {
                 $inc: { tokens: tokensWonRandom },
-                $set: { claimed: true }
+                $set: { claimed: true, lastSpin: now } 
             }
-        );
-
-        await spinsCollection.updateOne(
-            { username: session.username },
-            { $set: { lastSpin: now } },
-            { upsert: true }
         );
 
         res.status(200).json({
@@ -602,11 +596,15 @@ router.post("/spin", async (req, res) => {
         });
 
         setTimeout(async () => {
-            await usersCollection.updateOne(
+            const updateResult = await usersCollection.updateOne(
                 { username: session.username },
-                { $set: { claimed: false } }
-            );
-        }, 8 * 60 * 60 * 1000);
+                { $set: { claimed: false } 
+            });
+            if (updateResult.modifiedCount === 0) {
+                console.error("Failed to reset claimed status for user:", session.username);
+            }
+        }, 8 * 3600000); 
+
     } catch (error) {
         console.error("Error managing spins:", error);
         res.status(500).json({ message: "Internal server error" });

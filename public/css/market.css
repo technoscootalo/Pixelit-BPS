@@ -53,8 +53,8 @@ body {
 }
 
 .box {
-  height: 210px;
-  width: 210px;
+  height: 190px;
+  width: 180px;
   border-radius: 5px;
   padding: 20px;
   display: flex;
@@ -67,6 +67,12 @@ body {
   flex-direction: column;
   margin: 10px;
   text-align: center;
+}
+
+.packContainer {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: flex-start; 
 }
 
 .box:hover {

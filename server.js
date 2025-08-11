@@ -105,23 +105,41 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("A user connected");
+
   socket.on("getChat", async () => {
     const messages = await chatm.find().toArray();
     socket.emit("chatupdate", messages);
   });
+  
   socket.on("message", async (message) => {
+    const username = message.sender;
+
+    const user = await users.findOne({ username: username });
+    if (user.muted) {
+      return socket.emit("error", "User is muted.");
+    }
+    
       console.log("sending message");
       try {
           if (byte(message.msg) > 1000 || message.msg.trim() === "") {
               console.log("message too long");
               return;
           }
+        
+        const chatMessage = {
+          sender: username,
+          msg: message.msg,
+          badges: user.badges,
+          pfp: user.pfp,
+        };
 
+        await chatm.insertOne(chatMessage);
+        
           const cookief = socket.handshake.headers.cookie;
           console.log("getting response");
 
           const response = await axios.get(
-              "/user",
+              "https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/user",
               {
                   headers: {
                       Cookie: cookief,
@@ -143,62 +161,23 @@ io.on("connection", (socket) => {
                   return;
               }
 
-              const chatmessage = {
-                  sender: name,
-                  msg: message.msg,
-                  badges: user.badges,
-                  pfp: user.pfp,
-              };
+              await chatm.insertOne(chatmessage);
+              const updatedSentCount = user.sent + 1;
+              const updatedTokensCount = user.tokens + 1;
+              await users.updateOne(
+                  { username: name },
+                  { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
+              );
 
-            await chatm.insertOne(chatmessage);
-            const updatedSentCount = user.sent + 1;
-            const updatedTokensCount = user.tokens + 1;
-            await users.updateOne(
-                { username: username },
-                { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
-            );
-            const updatedMessageCount = await chatm.countDocuments();
-            io.emit("tokens", user.tokens, updatedSentCount, updatedMessageCount);
-            console.log("message sent");
+
+              io.emit("chatupdate", "get");
+              console.log("message sent");
           } else {
               socket.emit("error", response.data);
           }
       } catch (error) {
           console.error("Error during message handling:", error);
       }
-  });
-
-  socket.on("getChat", async () => {
-    const messages = await chatm.find().toArray();
-    socket.emit("chatupdate", messages);
-  });
-  socket.on("message", async (message) => {
-      const username = message.sender;
-      const user = await users.findOne({ username: username });
-      if (user.muted) {
-          return socket.emit("error", "User is muted.");
-      }
-
-      const chatmessage = {
-          sender: username,
-          msg: message.msg,
-          badges: user.badges,
-          pfp: user.pfp,
-      };
-
-      await chatm.insertOne(chatmessage);
-
-      const updatedSentCount = user.sent + 1;
-      const updatedTokensCount = user.tokens + 1;
-
-      await users.updateOne(
-          { username: username },
-          { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
-      );
-
-      const updatedMessageCount = await chatm.countDocuments(); 
-      io.emit("tokens", user.tokens, updatedSentCount, updatedMessageCount); 
-      console.log("Message sent");
   });
   
   socket.on("getNews", async () => {

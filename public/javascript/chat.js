@@ -119,8 +119,9 @@ function updateMessages(newMessages) {
         fragment.appendChild(messageHTML);
     });
 
-    messagesContainer.innerHTML = "";
-    messagesContainer.appendChild(fragment);
+    messagesContainer.innerHTML = ""; 
+    messagesContainer.appendChild(fragment); 
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
@@ -157,20 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.emit("getChat");
 
     socket.on("chatupdate", (data) => {
-        if (data === "get") {
-            socket.emit("getChat");
-            return;
-        }
-
         if (Array.isArray(data) && data.length > 0) {
-            const existingMessagesSet = new Set(messages.map(msg => msg._id));
-
-            data.forEach(msg => {
-                if (!existingMessagesSet.has(msg._id)) {
-                    messages.push(msg);
-                }
-            });
-
+            messages = data;
             updateMessages(messages);
         }
     });
