@@ -315,44 +315,6 @@ router.post("/changePassword", async (req, res) => {
   }
 });
 
-router.post("/changePfp", async (req, res) => {
-  const session = req.session;
-  if (session && session.loggedIn) {
-    try {
-      const db = client.db(db_name);
-      const users = db.collection("users");
-      const body = req.body;
-      const pack = session.packs.find((pack) => pack.name == body.parent);
-      if (!pack || pack === null) return;
-
-      const blook = pack.blooks.find((blook) => blook.name == body.name);
-      if (session.pfp == blook.imageUrl) {
-        return res.status(200).send({ message: "This is already your profile picture" });
-      }
-
-      if (blook && blook.owned >= 1) {
-        const result = await users.updateOne(
-          { username: session.username },
-          { $set: { pfp: blook.imageUrl } }
-        );
-
-        if (result.modifiedCount > 0) {
-          return res.redirect("/dashboard.html");
-        } else {
-          return res.status(500).send({ message: "Failed to update profile picture." });
-        }
-      }
-    } catch (error) {
-      console.error("Error updating profile picture:", error);
-      return res.status(500).send({ message: "Internal server error." });
-    }
-  } else {
-    return res.status(401).send({
-      message: "You must be logged in to change your profile picture.",
-    });
-  }
-});
-
 router.get("/packs", async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(500).send("You must be logged in to access this page.");
@@ -875,6 +837,43 @@ router.get("/top-senders", async (req, res) => {
         console.error('Error fetching top senders:', error);
         res.status(500).send("Internal Server Error");
     }
+});
+
+router.post("/changePfp", async (req, res) => {
+  const session = req.session;
+  const { name, parent } = req.body;
+
+  if (!session || !session.loggedIn) {
+    return res.status(401).json({ message: "You must be logged in to change your profile picture." });
+  }
+
+  try {
+    const user = await users.findOne({ username: session.username });
+    const pack = user.packs.find(p => p.name === parent);
+
+    if (!pack) {
+      return res.status(404).json({ message: "Pack not found." });
+    }
+
+    const blook = pack.blooks.find(blook => blook.name === name);
+    if (!blook || blook.owned < 1) {
+      return res.status(400).json({ message: "You do not own this blook." });
+    }
+
+    if (session.pfp === blook.imageUrl) {
+      return res.status(200).json({ message: "This is already your profile picture." });
+    }
+
+    await users.updateOne(
+      { username: session.username },
+      { $set: { pfp: blook.imageUrl } }
+    );
+
+    return res.status(200).json({ message: "Profile picture changed successfully." });
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
 });
 
 router.post("/changeUsername", async (req, res) => {

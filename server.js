@@ -133,13 +133,12 @@ io.on("connection", (socket) => {
           pfp: user.pfp,
         };
 
-        await chatm.insertOne(chatMessage);
         
           const cookief = socket.handshake.headers.cookie;
           console.log("getting response");
 
           const response = await axios.get(
-              "https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/user",
+              "https://pixelit.club/user",
               {
                   headers: {
                       Cookie: cookief,
@@ -153,24 +152,24 @@ io.on("connection", (socket) => {
 
           console.log(response);
           if (response.status !== 500) {
-              const name = response.data.username;
-              const user = await users.findOne({ username: name });
+              const username = response.data.username;
+              const user = await users.findOne({ username: username });
 
               if (!user) {
                   console.log("User not found in database.");
                   return;
               }
 
-              await chatm.insertOne(chatmessage);
+              await chatm.insertOne(chatMessage);
               const updatedSentCount = user.sent + 1;
               const updatedTokensCount = user.tokens + 1;
               await users.updateOne(
-                  { username: name },
+                  { username: username },
                   { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
               );
 
-
-              io.emit("chatupdate", "get");
+              const messages = await chatm.find().toArray();
+              io.emit("chatupdate", messages);
               console.log("message sent");
           } else {
               socket.emit("error", response.data);
@@ -194,4 +193,5 @@ server.listen(port, () => {
   console.log(`Server started successfully on port ${port}`);
   console.log(`Server is running at ${process.env["DEV_LINK"]}:${port}`);
 });
+
 console.log("Initializing server...");

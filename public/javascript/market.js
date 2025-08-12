@@ -60,7 +60,7 @@ function createPackElement(pack) {
     divBox.style.boxShadow = "inset 0 -0.365vw #8B8000, 3px 3px 15px rgba(0, 0, 0, 0.6)";
   }
 
-  if (pack.name === "School Pack") {
+  if (pack.name === "Fall Pack") {
     divBox.style.background = "radial-gradient(circle, #DEB887, #8B4513)";
     divBox.style.boxShadow = "inset 0 -0.365vw #8B4513, 3px 3px 15px rgba(0, 0, 0, 0.6)";
   }
@@ -78,6 +78,11 @@ function createPackElement(pack) {
   if (pack.name === "Technology Pack") {
     divBox.style.background = "radial-gradient(circle, #346136, #2faa34)";
     divBox.style.boxShadow = "inset 0 -0.365vw #346136, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  }
+
+  if (pack.name === "School Pack") {
+    divBox.style.background = "radial-gradient(circle, #836048, #66423a)";
+    divBox.style.boxShadow = "inset 0 -0.365vw #66423a, 3px 3px 15px rgba(0, 0, 0, 0.6)";
   }
 
   if (pack.name === "Miscellaneous") {
@@ -166,6 +171,7 @@ async function openPack(packName, packCost) {
     console.log("Server response:", result);
     userTokens -= packCost;
     updateTokenDisplay();
+    
     setTimeout(() => {
       packElement.classList.remove('opening');
       showPackContents(result.blook);
@@ -177,12 +183,12 @@ async function openPack(packName, packCost) {
   }
 }
 
-function showPackContents(result) {
-  
+function showPackContents(result) {  
   console.log("Pack contents:", result);
 
   const blook = result.blook || result;
   const packName = blook.packName;
+  const pack = { name: packName };
 
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
@@ -190,7 +196,7 @@ function showPackContents(result) {
   overlay.style.left = '0';
   overlay.style.width = '100%';
   overlay.style.height = '100%';
-  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  overlay.style.background = 'radial-gradient(circle, #330838, #4a034f)';
   overlay.style.zIndex = '999';
 
   const modal = document.createElement('div');
@@ -201,49 +207,26 @@ function showPackContents(result) {
   modal.style.transform = 'translate(-50%, -50%)';
   modal.style.zIndex = '1000';
   modal.style.textAlign = 'center';
-  modal.style.height = '210px';
-  modal.style.width = '210px';
-
-  if (packName === "OG Pack") {
-    modal.style.background = "radial-gradient(circle, #ADD8E6, #335494)";
-    modal.style.boxShadow = "inset 0 -0.365vw #335494, 3px 3px 15px rgba(0, 0, 0, 0.6)";
-  } 
-  if (packName === "Color Pack") {
-    modal.style.background = "radial-gradient(circle, #FFFF00, #8B8000)";
-    modal.style.boxShadow = "inset 0 -0.365vw #8B8000, 3px 3px 15px rgba(0, 0, 0, 0.6)";
-  } 
-  if (packName === "School Pack") {
-    modal.style.background = "radial-gradient(circle, #DEB887, #8B4513)";
-    modal.style.boxShadow = "inset 0 -0.365vw #8B4513, 3px 3px 15px rgba(0, 0, 0, 0.6)";
-  } 
-  if (packName === "Halloween Pack") {
-    modal.style.background = "radial-gradient(circle, #39272d, #67433e)";
-    modal.style.boxShadow = "inset 0 -0.365vw #39272d, 3px 3px 15px rgba(0, 0, 0, 0.6)";
-  } 
-  if (packName === "Space Pack") {
-    modal.style.background = "radial-gradient(circle, #808080, #00008B)";
-    modal.style.boxShadow = "inset 0 -0.365vw #00008B, 3px 3px 15px rgba(0, 0, 0, 0.6)";
-  }
-  if (packName === "Technology Pack") {
-    modal.style.background = "radial-gradient(circle, #D3D3D3, #808080)";
-    modal.style.boxShadow = "inset 0 -0.365vw #808080, 3px 3px 15px rgba(0, 0, 0, 0.6)";
-  }
-  
-  const blookImage = document.createElement('img');
-  blookImage.src = `${blook.imageUrl}`;
-  blookImage.alt = blook.name || 'Unknown Blook';
-  blookImage.style.width = '100px';
-  blookImage.style.height = '100px';
-  blookImage.style.borderRadius = '5px';
-  blookImage.onerror = function() {
-    console.error("Failed to load image:", this.src);
-    this.src = 'https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';
-  };
+  modal.style.height = '375px';
+  modal.style.width = '360px';
+  modal.style.borderRadius = '10px';
+  modal.style.boxShadow = "inset 0 -0.365vw #330838, 3px 3px 15px rgba(0, 0, 0, 0.6)";
+  modal.style.background = 'radial-gradient(circle, #6f057a, #4a034f)';
 
   const blookName = document.createElement('p');
   blookName.textContent = `${blook.name || 'Unknown Blook'}`;
-  blookName.style.margin = '10px 0';
+  blookName.style.fontSize = '42px';
+  blookName.style.padding = '0px';
+  blookName.style.fontWeight = 'bold';
+  
+  if (blookName.textContent.length > 15) {
+    modal.style.width = '360px';
+    modal.style.height = '420px';
+  }
 
+  const breakLine = document.createElement('br');
+  modal.appendChild(breakLine);
+  
   const RARITY_COLORS = {
     uncommon: "#4bc22e",
     rare: "blue",
@@ -255,30 +238,49 @@ function showPackContents(result) {
   
   const blookInfo = document.createElement('p');
   const rarityColor = RARITY_COLORS[blook.rarity?.toLowerCase()] || 'black';
-  blookInfo.textContent = `${blook.rarity || 'Unknown'}`;
+  const rarity = blook.rarity || 'Unknown';
+  const formattedRarity = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+  blookInfo.textContent = `${formattedRarity}`;
   blookInfo.style.margin = '5px 0';
+  blookInfo.style.fontSize = '28px';
+  blookInfo.style.fontWeight = 'bold';
   blookInfo.style.color = rarityColor;
 
-  const closeButton = document.createElement('button');
-  closeButton.textContent = 'Proceed';
-  closeButton.onclick = () => document.body.removeChild(overlay);
-  closeButton.style.backgroundColor = '#6f057a';
-  closeButton.style.boxShadow = 'inset 0 -0.265vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)';
-  closeButton.style.border = 'none';
-  closeButton.style.padding = '10px 20px';
-  closeButton.style.borderRadius = '5px';
-  closeButton.style.fontFamily = 'Pixelify Sans';
-  closeButton.style.color = 'white';
-  closeButton.style.cursor = 'pointer';
-  closeButton.style.transform = 'scale(0.95)';
-  closeButton.style.transition = 'transform 0.3s ease';
-  closeButton.style.marginTop = '10px';
 
-  modal.appendChild(blookImage);
+  
+  const breakLine2 = document.createElement('br');
+  modal.appendChild(breakLine2);
+  
+  const blookImage = document.createElement('img');
+  blookImage.src = `${blook.imageUrl}`;
+  blookImage.alt = blook.name || 'Unknown Blook';
+  blookImage.style.width = '160px';
+  blookImage.style.height = '160px';
+  blookImage.style.borderRadius = '5px';
+  blookImage.onerror = function() {
+    console.error("Failed to load image:", this.src);
+    this.src = 'https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';
+  };
+  
+  const br = document.createElement('br');
+  modal.appendChild(br);
+  
+  const blookChance = document.createElement('p');
+  blookChance.textContent = `${blook.chance}%`;
+  blookChance.style.margin = '5px 0';
+  blookChance.style.fontSize = '28px';
+  blookChance.style.fontWeight = 'bold';
+  blookChance.style.color = 'white';
+  
   modal.appendChild(blookName);
+  modal.appendChild(br);
   modal.appendChild(blookInfo);
-  modal.appendChild(closeButton);
+  modal.appendChild(blookImage);
+  modal.appendChild(br);
+  modal.appendChild(blookChance);
   overlay.appendChild(modal);
+
+  overlay.onclick = () => document.body.removeChild(overlay);
 
   document.body.appendChild(overlay);
 }
@@ -314,7 +316,7 @@ style.textContent = `
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #6f057a;
     display: flex;
     justify-content: center;
     align-items: center;

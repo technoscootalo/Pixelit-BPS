@@ -122,7 +122,6 @@ function updateMessages(newMessages) {
     messagesContainer.innerHTML = ""; 
     messagesContainer.appendChild(fragment); 
 
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 const byte = (str) => new Blob([str]).size;
@@ -161,6 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (Array.isArray(data) && data.length > 0) {
             messages = data;
             updateMessages(messages);
+
+            const messagesContainer = ge("chatContainer");
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;  
         }
     });
 });

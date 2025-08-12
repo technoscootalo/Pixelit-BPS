@@ -33,6 +33,23 @@ body {
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
 }
 
+@media screen and (max-width: 600px) {
+  .navbar {
+    border-radius: 0; 
+    box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
+  }
+  .navbar a, .dropdown .dropbtn {
+    float: none;
+    display: block;
+    padding: 10px;
+  }
+  .dropdown-content {
+    position: relative;
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
+
 .navbar a {
   float: left;
   font-size: 16px;
@@ -107,6 +124,17 @@ body {
   text-shadow: #000 1px 0 13px;
 }
 
+@media screen and (max-width: 600px) {
+  .title_p {
+    margin-left: 80%;
+    position: absolute;
+    top: 1%;
+    font-size: 24px;
+    color: #fff;
+    text-shadow: #000 1px 0 13px;
+  }
+}
+
 @keyframes float {
   0% {
     transform: translateY(0);
@@ -147,6 +175,28 @@ body {
   right: 70%; 
 }
 
+@media screen and (max-width: 600px) {
+  .title-text-1 {
+    bottom: 10%;
+    left: 0%;
+    text-align: center;
+    top: auto;
+    right: auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .title-text-2 {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .title-text-3 {
+    display: none;
+  }
+}
+
 .float-img { 
   height: 50%; 
   width: 50%; 
@@ -156,12 +206,36 @@ body {
   cursor: pointer; 
 }
 
+@media screen and (max-width: 600px) {
+  .float-img {
+    height: 50%;
+    width: 80%;
+    left: 0%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+    cursor: pointer;
+  }
+}
+
 .pronunciation { 
   position: absolute; 
   bottom: 7%; 
   left: 9%; 
   font-size: 1.5em; 
   cursor: pointer; 
+}
+
+@media sceen and (max-width: 600px) {
+  .pronounciation {
+    position: absolute; 
+    bottom: 20%; 
+    left: 14%; 
+    font-size: 1.5em; 
+    cursor: pointer; 
+    text-align: center;
+  }
 }
 
 .pronunciation-icon { 
@@ -175,11 +249,27 @@ body {
   text-shadow: 2px 2px 4px #000; 
 }
 
+@media screen and (max-width: 600px) {
+  .pronunciation-text {
+    top: 100%;
+    left: 7%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    text-align: center;
+  }
+}
+
 .socials { 
   position: absolute; 
   bottom: 1%; 
   left: 50%; 
   transform: translateX(-50%); 
+}
+
+@media screen and (max-width: 600px) {
+  .socials {
+    display: none;
+  }
 }
 
 .social-link { 
@@ -199,48 +289,13 @@ body {
   text-shadow: #000 1px 0 13px; 
 }
 
-@media only screen 
-  and (device-width: 428px) 
-  and (device-height: 926px) 
-  and (-webkit-device-pixel-ratio: 3) {
-  .container {
-    max-width: 428px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-  .title_p {
-    margin-left: 0;
-    text-align: center;
-    position: static;
-    padding: 10px 0;
-  }
-  .title-text {
-    position: static;
-    margin: 15px 0;
+@media screen and (max-width: 600px) {
+  .terms-of-service {
+    position: absolute;
+    bottom: 0%;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     font-size: 16px;
-  }
-  .title-text-1, .title-text-2, .title-text-3 {
-    left: initial;
-    right: initial;
-  }
-  .float-img {
-    display: none;
-  }
-  .pronunciation {
-    position: static;
-    text-align: center;
-    margin: 15px 0;
-  }
-  .socials {
-    position: static;
-    text-align: center;
-    margin: 15px 0;
-  }
-  .terms-of-service {
-    position: static;
-    text-align: center;
-    margin: 15px 0;
-    font-size: 32px;
   }
 }

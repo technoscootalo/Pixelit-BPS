@@ -108,9 +108,6 @@ function generatePacksHTML(packsData) {
         const img = document.createElement("img");
         img.src = `${blook.imageUrl}`;
         img.alt = blook.name;
-        img.onerror = function() {
-            this.src = 'https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';
-        };
         itemDiv.appendChild(img);
 
         const badge = document.createElement("div");
@@ -491,24 +488,28 @@ function changeProfilePicture(blookName, imageUrl, packName) {
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
 
-  yesButton.onclick = () => {
-    fetchJSON("/changePfp", {
-      method: "POST",
-      body: JSON.stringify({ name: blookName, parent: packName })
-    })
-    .then(data => {
-      if (data.success) {
-        document.body.removeChild(modal);
-        window.location.href = '/dashboard.html'; 
-      } else {
-        window.location.href = '/dashboard.html?error=' + encodeURIComponent(data.message || "Failed to change profile picture.");
+  
+  yesButton.onclick = async () => {
+    try {
+      const response = await fetch("/changePfp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: blookName, parent: packName })
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
       }
-    })
-    .catch(error => {
-      console.error("Error changing profile picture:", error);
-      window.location.href = '/dashboard.html?error=' + encodeURIComponent("An error occurred while changing the profile picture. Please try again.");
+      const data = await response.json();
       document.body.removeChild(modal);
-    });
+      window.location.href = '/dashboard.html';
+    } catch (error) {
+      console.error("Error changing profile picture:", error);
+      alert(error.message || "An error occurred while changing your profile picture. Please try again.");
+      document.body.removeChild(modal);
+    }
   };
 
   noButton.onclick = () => {

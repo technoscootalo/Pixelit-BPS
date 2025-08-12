@@ -98,6 +98,7 @@ body {
   max-width: 90%;
   max-height: 90%;
   cursor: pointer;
+  border-radius: 5px;
 }
 .blook-details {
   position: absolute;
@@ -112,6 +113,10 @@ body {
   height: 430px;
 }
 
+.blook-details img {
+  border-radius: 5px;
+}
+
 .blook-details h3 {
   font-size: 18px;
   margin-bottom: 10px;
@@ -120,6 +125,7 @@ body {
 .blook-details p {
   margin: 5px 0;
 }
+
 
 .blook-details button {
   margin-top: 10px;
