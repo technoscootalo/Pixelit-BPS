@@ -6,6 +6,12 @@ body {
   padding: 0;
 }
 
+@media screen and (max-width: 600px) {
+  body {
+    overflow: visible;
+  }
+}
+
 .bg_img {
   position: fixed;
   width: 250%;
@@ -26,6 +32,24 @@ body {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
+}
+
+@media screen and (max-width: 600px) {
+  .navbar {
+    border-radius: 0;
+    box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+    width: 100%;
+  }
+  .navbar a, .dropdown .dropbtn {
+    float: none;
+    display: block;
+    padding: 10px;
+  }
+  .dropdown-content {
+    position: relative;
+    box-shadow: none;
+    border-radius: 0;
+  }
 }
 
 .navbar a {
@@ -50,6 +74,12 @@ body {
   font-size: 26px;
   color: #fff;
   text-shadow: #000 1px 0 13px;
+}
+
+@media screen and (max-width: 600px) {
+  .title_p {
+    display: none;
+  }
 }
 
 .box {
@@ -96,6 +126,12 @@ body {
   left: 0;
 }
 
+@media screen and (max-width: 600px) {
+  .token_box {
+    display: none;
+  }
+}
+
 .rarityButton {
   position: fixed;
   color: white;
@@ -110,6 +146,13 @@ body {
   background-color: #6f057a;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   font-family: Pixelify Sans;
+}
+
+
+@media screen and (max-width: 600px) {
+  .rarityButton {
+    display: none;
+  }
 }
 
 .rarityButton:hover {
