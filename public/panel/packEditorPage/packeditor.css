@@ -22,9 +22,26 @@ body {
 .navbar {
   overflow: hidden;
   background-color: #6f057a;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
+}
+
+@media screen and (max-width: 600px) {
+  .navbar {
+    border-radius: 0; 
+    box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
+  }
+  .navbar a, .dropdown .dropbtn {
+    float: none;
+    display: block;
+    padding: 10px;
+  }
+  .dropdown-content {
+    position: relative;
+    box-shadow: none;
+    border-radius: 0;
+  }
 }
 
 .navbar a {
@@ -51,10 +68,30 @@ body {
   text-shadow: 0 1px 13px #000000;
 }
 
+@media screen and (max-width: 600px) {
+  .title_p {
+    margin-left: 80%;
+    position: absolute;
+    top: 1%;
+    font-size: 24px;
+    color: #fff;
+    text-shadow: #000 1px 0 13px;
+  }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+  }
 }
 
 .pack {
@@ -117,6 +154,12 @@ body {
   display: block;
 }
 
+@media screen and (max-width: 600px) {
+  .button {
+    width: 25%;
+  }
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -168,6 +211,14 @@ body {
 
 .blook-adder .button {
   width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+  .blook-adder {
+    width: 92%;
+    position: static;
+    margin-top: 300px;
+  }
 }
 
 .form-group input[type='text'],

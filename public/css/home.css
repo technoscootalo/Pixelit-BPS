@@ -28,8 +28,8 @@ body {
 .navbar {
   overflow: hidden;
   background-color: #6f057a;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
 }
 
@@ -177,7 +177,7 @@ body {
 
 @media screen and (max-width: 600px) {
   .title-text-1 {
-    bottom: 10%;
+    bottom: 50%;
     left: 0%;
     text-align: center;
     top: auto;
@@ -187,13 +187,21 @@ body {
 
 @media screen and (max-width: 600px) {
   .title-text-2 {
-    display: none;
+    bottom: 30%;
+    left: 0%;
+    text-align: center;
+    top: auto;
+    right: auto;
   }
 }
 
 @media screen and (max-width: 600px) {
   .title-text-3 {
-    display: none;
+    bottom: 10%;
+    left: 0%;
+    text-align: center;
+    top: auto;
+    right: auto;
   }
 }
 
