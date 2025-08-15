@@ -113,32 +113,32 @@ io.on("connection", (socket) => {
   
   socket.on("message", async (message) => {
     const username = message.sender;
-
+    const timestamp = message.timestamp;
     const user = await users.findOne({ username: username });
     if (user.muted) {
       return socket.emit("error", "User is muted.");
     }
-    
-      console.log("sending message");
-      try {
-          if (byte(message.msg) > 1000 || message.msg.trim() === "") {
-              console.log("message too long");
-              return;
-          }
-        
-        const chatMessage = {
-          sender: username,
-          msg: message.msg,
-          badges: user.badges,
-          pfp: user.pfp,
-        };
+    console.log("sending message");
+    try {
+      if (byte(message.msg) > 1000 || message.msg.trim() === "") {
+        console.log("message too long");
+        return;
+      }
+      
+      const chatMessage = {
+        sender: username,
+        msg: message.msg,
+        badges: user.badges,
+        pfp: user.pfp,
+        timestamp: timestamp 
+      };
 
         
           const cookief = socket.handshake.headers.cookie;
           console.log("getting response");
 
           const response = await axios.get(
-              "https://pixelit.club/user",
+              "https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/user",
               {
                   headers: {
                       Cookie: cookief,

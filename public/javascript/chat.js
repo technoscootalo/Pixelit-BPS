@@ -81,12 +81,35 @@ fetch("/user", {
     console.error("Error fetching user data:", error);
 });
 
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+
+    const options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    };
+
+    const formattedDate = date.toLocaleString(undefined, options).replace(',', '');
+
+    if (date.toDateString() === now.toDateString()) {
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (date.toDateString() === new Date(now.setDate(now.getDate()-1)).toDateString()) {
+        return `Yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    } else {
+        return formattedDate;
+    }
+}
+
 function createMessageHTML(message) {
     const username = escapeHTML(message.sender);
     const badgesHTML = (message.badges || []).map(
         badge => `<img src="${escapeHTML(badge.image)}" draggable="false" class="badge" />`
     ).join("");
-
     const mediaUrlPattern = /(https?:\/\/[^\s]+\.(gif|jpeg|jpg|png|bmp|webp|svg|tiff|tif|ico)|data:image\/[a-zA-Z]+;base64,[^\s]+)/i;
     let messageContent;
 
@@ -96,11 +119,14 @@ function createMessageHTML(message) {
                 src="${escapeHTML(message.msg)}" 
                 class="chatImages" 
                 style="margin-top: 10px;" 
-                onclick="openModal('${escapeHTML(message.msg)}')" /> <!-- Open modal on click -->
-            <br>`.repeat(1);
+                onclick="openModal('${escapeHTML(message.msg)}')" />
+            <br>`;
     } else {
         messageContent = parseMessage(message.msg);
     }
+
+    const formattedTime = formatTimestamp(message.timestamp);
+    const timestampHTML = formattedTime ? `<span class="timestamp" style="font-size: 10px;">${formattedTime}</span>` : `<span class="timestamp" style="font-size: 10px;">Invalid Date</span>`;
 
     return `
     <div class="message">
@@ -114,7 +140,7 @@ function createMessageHTML(message) {
         </div>
         <div class="messageContainer">
             <div class="usernameAndBadges">
-                <div class="username">${username}</div>
+                <div class="username">${username} ${timestampHTML}</div>
                 <br>
                 <div class="badges">${badgesHTML}</div>
             </div>
@@ -122,7 +148,7 @@ function createMessageHTML(message) {
         </div>
     </div>
     <br>
-    `;
+    <br>`;
 }
 
 function openModal(imageSrc) {
@@ -210,7 +236,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.target.value = "";
                 return;
             }
-            const chatMessage = { sender: username, msg, badges, pfp };
+             const timestamp = Date.now();
+            const chatMessage = { sender: username, msg, badges, pfp, timestamp };
             const messageHTML = createMessageHTML(chatMessage);
             const messagesContainer = ge("chatContainer");
             messagesContainer.innerHTML += messageHTML;
