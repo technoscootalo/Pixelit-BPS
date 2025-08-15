@@ -42,12 +42,13 @@
         </div>
         <div class="title_p" id="title_p">Pixelit</div>
       </div>
-      <center>
-        <div class="container">
-          <h1>Badge Editor</h1>
-          <div id="userList"></div>
+      <div class="container">
+        <h1>Badge Editor</h1>
+        <input type="text" id="searchBar" placeholder="Search for users..." onkeyup="searchUsers()">
+        <div id="userList"></div> 
+        <div id="additional-content">
         </div>
-      </center>
+      </div>
     <script src="../../api/verifyenc.js"></script>
     <script src="./badgeeditor.js"></script>
     <script src="/api/verifyOwner.js"></script>

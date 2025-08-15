@@ -58,9 +58,13 @@ function login(event) {
       setTimeout(() => {
         window.location.href = '/dashboard.html'; 
       }, 2000);
-    } else if (status === 401 || status === 403) {
+    } else if (status === 401) {
       errorMsg.style.color = "red";
       errorMsg.textContent = body.message || "Invalid username or password.";
+    } else if (status === 403) {
+      errorMsg.style.color = "red";
+      errorMsg.textContent = `Your account is currently banned from Pixelit, If you believe this is a mistake, please reach us via Discord.`;
+      errorMsg.style.textAlign = "center";
     } else if (status === 500) {
       errorMsg.style.color = "red";
       errorMsg.textContent = 'Account does not exist.';

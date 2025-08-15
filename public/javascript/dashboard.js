@@ -1,5 +1,12 @@
 const socket = io();
 
+const username = ge("username");
+const tokens = ge("tokens");
+const sent = ge("messages");
+const spin = ge("spin");
+const packsOpened = ge("packs");
+
+
 if (localStorage.loggedin == "true") {
   sessionStorage = localStorage;
 }
@@ -8,35 +15,46 @@ function ge(id) {
   return document.getElementById(id);
 }
 
-window.onload = () => {
-  fetch("/user", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+document.addEventListener('DOMContentLoaded', function() {
+    fetch("/user", {
+        method: 'GET',
+        credentials: 'include', 
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
     .then((response) => {
-      if (response.status === 200) {
-        return response.json(); 
-      } else if (response.status === 500) {
-        return response.text().then((text) => {
-          alert(text);
-        });
-      } else if (response.status === 401) {
-        sessionStorage.clear();
-        window.location.href = "/login.html";
-      } else {
-        console.error("Unexpected response status:", response.status);
-        throw new Error("Unexpected response status");
-      }
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert("You are not logged in. Please log in to continue.");
+                window.location.href = "/login.html"; 
+            } else {
+                return response.text().then(text => {
+                    throw new Error(`Network response was not ok: ${response.status} - ${text}`);
+                });
+            }
+        }
+        return response.json();
     })
     .then((data) => {
-      document.getElementById("tokens").innerHTML = data.tokens;
+        const badgesContainer = document.getElementById("badges");
+        const badgesContainerParent = document.getElementById("badges-container");
+        badgesContainer.innerHTML = ""; 
+
+        if (!data.badges || data.badges.length === 0) {
+            badgesContainerParent.style.display = 'none'; 
+        } else {
+            badgesContainerParent.style.display = 'block';
+            data.badges.forEach(badge => {
+                const badgeHTML = `<img src="${badge.image}" alt="${badge.name}" class="badge" />`;
+                badgesContainer.innerHTML += badgeHTML;
+            });
+        }
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
+        console.error("Error fetching user badges:", error);
     });
-};
+});
 
 const user = {
   username: "username",
@@ -51,12 +69,6 @@ const user = {
   claimed: false,
   stats: { sent: 0, packsOpened: 0 },
 };
-
-const username = ge("username");
-const tokens = ge("tokens");
-const sent = ge("messages");
-const spin = ge("spin");
-const packsOpened = ge("packs");
 
 fetch("/user")
   .then((response) => {

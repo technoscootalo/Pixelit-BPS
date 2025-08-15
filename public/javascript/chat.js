@@ -1,4 +1,4 @@
-function escapeHTML(str) {
+ function escapeHTML(str) {
     const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
@@ -68,7 +68,7 @@ fetch("/user", {
         };
 
         const muteText = document.createElement('div');
-        muteText.textContent = "You are currently serving a mute and players will not be able to see your messages. Mute reason: " + (data.muteReason || "No reason provided.");
+        muteText.textContent = "You are currently serving a mute and players will not be able to see your messages. Mute duration: " + (data.muteDuration) + " minutes. Mute reason: " + (data.muteReason || "No reason provided.");
         muteText.style.color = 'red';
         muteText.style.marginLeft = '10px'; 
 
@@ -87,27 +87,93 @@ function createMessageHTML(message) {
         badge => `<img src="${escapeHTML(badge.image)}" draggable="false" class="badge" />`
     ).join("");
 
+    const mediaUrlPattern = /(https?:\/\/[^\s]+\.(gif|jpeg|jpg|png|bmp|webp|svg|tiff|tif|ico)|data:image\/[a-zA-Z]+;base64,[^\s]+)/i;
+    let messageContent;
+
+    if (mediaUrlPattern.test(message.msg) && isValidUrl(message.msg)) {
+        messageContent = `
+            <img 
+                src="${escapeHTML(message.msg)}" 
+                class="chatImages" 
+                style="margin-top: 10px;" 
+                onclick="openModal('${escapeHTML(message.msg)}')" /> <!-- Open modal on click -->
+            <br>`.repeat(1);
+    } else {
+        messageContent = parseMessage(message.msg);
+    }
+
     return `
-        <div class="message">
-            <div class="pfp">
-                <img
-                    src="${escapeHTML(message.pfp)}"
-                    draggable="false"
-                    style="filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5))"
-                    onerror="this.src='https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';"
-                />
-            </div>
-            <div class="messageContainer">
-                <div class="usernameAndBadges">
-                    <div class="username">${username}</div>
-                    <div class="badges">${badgesHTML}</div>
-                </div>
-                <div class="messageText">${parseMessage(message.msg)}</div>
-            </div>
+    <div class="message">
+        <div class="pfp">
+            <img
+                src="${escapeHTML(message.pfp)}"
+                draggable="false"
+                style="filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5))"
+                onerror="this.src='https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';"
+            />
         </div>
-        <br>
+        <div class="messageContainer">
+            <div class="usernameAndBadges">
+                <div class="username">${username}</div>
+                <br>
+                <div class="badges">${badgesHTML}</div>
+            </div>
+            <div class="messageText">${messageContent}</div>
+        </div>
+    </div>
+    <br>
     `;
 }
+
+function openModal(imageSrc) {
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    modal.style.display = "flex";
+    modalImage.src = imageSrc;
+}
+
+function closeModal() {
+    const modal = document.getElementById("imageModal");
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("imageModal");
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;  
+    }
+}
+
+document.addEventListener("paste", (event) => {
+    const items = event.clipboardData.items;
+    for (const item of items) {
+        if (item.type.startsWith("image/")) {
+            const file = item.getAsFile();
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const imageUrl = event.target.result; 
+                const chatMessage = { sender: username, msg: imageUrl, badges, pfp };
+                const messageHTML = createMessageHTML(chatMessage);
+                const messagesContainer = ge("chatContainer");
+                messagesContainer.innerHTML += messageHTML;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                socket.emit("message", chatMessage); 
+            };
+            reader.readAsDataURL(file); 
+            break; 
+        }
+    }
+});
+
 
 function updateMessages(newMessages) {
     const messagesContainer = ge("chatContainer");
@@ -130,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const socket = io();
     console.log("Chat has been successfully loaded!");
 
-    ge("send").addEventListener("keydown", (e) => {
+    const sendInput = ge("send");
+    sendInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
             const msg = e.target.value.trim();
@@ -144,13 +211,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             const chatMessage = { sender: username, msg, badges, pfp };
-
             const messageHTML = createMessageHTML(chatMessage);
             const messagesContainer = ge("chatContainer");
             messagesContainer.innerHTML += messageHTML;
-            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
             socket.emit("message", chatMessage);
             e.target.value = "";
+        } else {
+            adjustInputHeight(sendInput);
         }
     });
 
@@ -160,11 +228,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (Array.isArray(data) && data.length > 0) {
             messages = data;
             updateMessages(messages);
-
             const messagesContainer = ge("chatContainer");
             messagesContainer.scrollTop = messagesContainer.scrollHeight;  
         }
     });
+
+    function adjustInputHeight(input) {
+        input.style.height = 'auto'; 
+        input.style.height = `${input.scrollHeight}px`; 
+        const maxWidth = window.innerWidth * 0.9; 
+        const currentWidth = Math.min(maxWidth, input.value.length * 10); 
+        input.style.width = `100%`;
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {

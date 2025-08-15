@@ -114,6 +114,8 @@ router.get("/user", async (req, res) => {
               banned: user.banned,
               banReason: user.banReason || "",
               stats: { sent: user.sent, packsOpened: user.packsOpened },
+              muteDuration: user.muteDuration,
+              banDuration: user.banDuration,
           });
       }
   } else {
@@ -132,7 +134,7 @@ router.post("/login", async (req, res) => {
     if (user.banned){
       return res.status(403).send(`Your account is currently banned. Reason: ${user.banReason || "No reason provided."}`);
     }
-    
+
     if (user) {
       if (await validatePassword(pass, user.password)) {
         req.session.loggedIn = true;
@@ -268,6 +270,8 @@ router.post("/addAccount", async (req, res) => {
             banReason: "No Reason Provided",
             packs: await packs.find().toArray(),
             badges: [],
+            banDuration: 0,
+            muteDuration: 0,
           });
         }
         try {
@@ -728,42 +732,89 @@ router.get("/openPack", packOpenLimiter, async (req, res) => {
 });
 
 router.post("/muteBanUser", async (req, res) => {
-  try {
-    const { username, action, reason } = req.body;
-    const user = await users.findOne({ username: req.session.username });
-    const targetUser = await users.findOne({ username });
+    try {
+        const { username, action, reason, duration } = req.body;
+        const user = await users.findOne({ username: req.session.username });
 
-    if (!targetUser) {
-      return res.status(404).send("User not found");
-    }
+        const durationInt = parseInt(duration, 10);
 
-    if (action === "mute") {
-        if (user && ["Owner", "Developer", "Moderator", "Admin", "Helper"].includes(user.role)) {
-          await users.updateOne(
-            { username },
-            { $set: { muted: true, muteReason: reason || "No reason provided" } }
-          );
-          return res.status(200).send(`${username} has been muted.`);
-        } else {
-          return res.status(403).send("You do not have permission to mute users.");
+        if (isNaN(durationInt) || durationInt < 0) {
+            return res.status(400).send("Invalid duration specified. Duration must be a non-negative integer.");
         }
+
+        if (action === "mute") {
+            if (user && ["Owner", "Developer", "Moderator", "Admin", "Helper"].includes(user.role)) {
+                await users.updateOne(
+                    { username },
+                    { 
+                        $set: { 
+                            muted: true, 
+                            muteReason: reason || "No reason provided", 
+                            muteDuration: durationInt 
+                        }
+                    }
+                );
+
+                if (durationInt > 0) {
+                    setTimeout(async () => {
+                        await users.updateOne(
+                            { username },
+                            { 
+                                $set: { 
+                                    muted: false, 
+                                    muteReason: "No reason provided", 
+                                    muteDuration: 0 
+                                } 
+                            }
+                        );
+                    }, durationInt * 60 * 1000);
+                }
+
+                return res.status(200).send(`${username} has been muted for ${durationInt} minute(s).`);
+            } else {
+                return res.status(403).send("You do not have permission to mute users.");
+            }
+        }
+
+        if (action === "ban") {
+            if (user && ["Owner", "Developer", "Admin", "Moderator"].includes(user.role)) {
+                await users.updateOne(
+                    { username },
+                    { 
+                        $set: { 
+                            banned: true, 
+                            banReason: reason || "No reason provided", 
+                            banDuration: durationInt 
+                        }
+                    }
+                );
+
+                if (durationInt > 0) {
+                    setTimeout(async () => {
+                        await users.updateOne(
+                            { username },
+                            { 
+                                $set: { 
+                                    banned: false, 
+                                    banReason: "No reason provided", 
+                                    banDuration: 0 
+                                } 
+                            }
+                        );
+                    }, durationInt * 60 * 1000);
+                }
+
+                return res.status(200).send(`${username} has been banned for ${durationInt} minute(s).`);
+            } else {
+                return res.status(403).send("You do not have permission to ban users.");
+            }
+        }
+
+        return res.status(400).send("Invalid action specified. Use 'mute' or 'ban'.");
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send("Server error!");
     }
-    if (action === "ban") {
-      if (user && ["Owner", "Developer", "Admin", "Moderator"].includes(user.role)) {
-        await users.updateOne(
-          { username },
-          { $set: { banned: true, banReason: reason || "No reason provided" } }
-        );
-        return res.status(200).send(`${username} has been banned.`);
-      } else {
-        return res.status(403).send("You do not have permission to ban users.");
-      }
-    }
-    return res.status(400).send("Invalid action specified. Use 'mute' or 'ban'.");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Server error!");
-  }
 });
 
 router.post("/unmuteUnbanUser", async (req, res) => {
@@ -780,7 +831,13 @@ router.post("/unmuteUnbanUser", async (req, res) => {
             if (user && ["Owner", "Developer", "Moderator", "Admin", "Helper"].includes(user.role)) {
                 await users.updateOne(
                     { username },
-                    { $set: { muted: false, muteReason: "No reason provided" } }
+                    { 
+                        $set: {
+                            muted: false,
+                            muteReason: "No reason provided",
+                            muteDuration: 0 
+                        }
+                    }
                 );
                 return res.status(200).send(`${username} has been unmuted.`);
             } else {
@@ -792,7 +849,13 @@ router.post("/unmuteUnbanUser", async (req, res) => {
             if (user && ["Owner", "Developer", "Admin", "Moderator"].includes(user.role)) {
                 await users.updateOne(
                     { username },
-                    { $set: { banned: false, banReason: "No reason provided" } }
+                    { 
+                        $set: {
+                            banned: false,
+                            banReason: "No reason provided",
+                            banDuration: 0 
+                        }
+                    }
                 );
                 return res.status(200).send(`${username} has been unbanned.`);
             } else {
@@ -885,9 +948,17 @@ router.post("/changeUsername", async (req, res) => {
     const user = await users.findOne({ username: session.username });
 
     if (user && await validatePassword(password, user.password)) {
-        const existingUser = await users.findOne({ username: newUsername });
+        const normalizedNewUsername = newUsername.toLowerCase();
+
+        const existingUser = await users.findOne({ username: normalizedNewUsername });
+
         if (existingUser) {
             return res.status(400).send("Username already exists.");
+        }
+
+        const normalizedCurrentUsername = user.username.toLowerCase();
+        if (normalizedCurrentUsername === normalizedNewUsername) {
+            return res.status(400).send("New username cannot be the same as the current username (case-insensitive).");
         }
 
         await users.updateOne(
@@ -899,6 +970,31 @@ router.post("/changeUsername", async (req, res) => {
     } else {
         res.status(401).send("Incorrect password.");
     }
+});
+
+router.post("/changePassword", async (req, res) => {
+    const session = req.session;
+
+    if (!session.loggedIn) {
+        return res.status(401).send("You must be logged in to change your password.");
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const db = client.db(db_name);
+    const user = await db.collection("users").findOne({ username: session.username });
+
+    if (!user) {
+        return res.status(404).send("User not found.");
+    }
+
+    const isPasswordValid = await validatePassword(currentPassword, user.password);
+    if (!isPasswordValid) {
+        return res.status(401).send("Current password is incorrect.");
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    await db.collection("users").updateOne({ username: session.username }, { $set: { password: hashedPassword } });
+    res.status(200).send("Password changed successfully."); 
 });
 
 router.get("/allUsers", async (req, res) => {
@@ -913,6 +1009,37 @@ router.get("/allUsers", async (req, res) => {
     console.error("Error fetching users:", error);
     res.status(500).send("Error fetching users");
   }
+});
+
+router.get("/badges", async (req, res) => {
+    try {
+        const badgesList = await badges.find().toArray();
+        res.status(200).json(badgesList); 
+    } catch (error) {
+        console.error('Error fetching badges:', error);
+        res.status(500).send("Internal Server Error");     
+    }
+});
+
+router.post("/add-badge", async (req, res) => {
+    const { userId, badgeId } = req.body;
+
+    try {
+        const user = await users.findOne({ _id: ObjectId(userId) });
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        const badge = await badges.findOne({ _id: ObjectId(badgeId) });
+        if (!badge) {
+            return res.status(404).send("Badge not found");
+        }
+        const updatedBadges = [...(user.badges || []), badge];
+        await users.updateOne({ _id: ObjectId(userId) }, { $set: { badges: updatedBadges } });
+        res.status(200).send("Badge added successfully!");
+    } catch (error) {
+        console.error("Error adding badge:", error);
+        res.status(500).send("Error adding badge");
+    }
 });
 
 module.exports = router;

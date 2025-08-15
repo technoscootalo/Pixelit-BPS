@@ -3,9 +3,9 @@
 }
 
 #userList {
-  background-color: #fff;
+  background-color: #6f057a;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
-  box-shadow: inset 0 -0.365vw #cfc9c9, 3px 3px 15px rgba(0, 0, 0, 0.6);
   padding: 20px;
   margin-top: 20px;
 }
@@ -14,19 +14,15 @@
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
-  background-color: #f3e8ff; 
-  color: #4a0e4b; 
-  border: 1px solid #d240dc; 
-}
-
-#userList div:hover {
-  background-color: #e6bfff; 
+  border: 2px solid #9613a4; 
 }
 
 body {
   font-family: 'Pixelify Sans', sans-serif;
   background-color: #6d0180;
   color: white;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .container {
@@ -44,12 +40,15 @@ input[type="text"] {
   font-size: 16px;
   border: none;
   border-radius: 5px;
+  font-family: 'Pixelify Sans', sans-serif;
 }
 
 button {
   padding: 10px 20px;
+  font-family: 'Pixelify Sans', sans-serif;
   font-size: 16px;
-  background-color: #9900cc;
+  background-color: #6f057a;
+  box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
   border-radius: 5px;
@@ -65,7 +64,6 @@ button {
 .badge {
   display: flex;
   align-items: center;
-  background-color: #800097;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
@@ -122,4 +120,49 @@ button {
   font-size: 26px;
   color: #fff;
   text-shadow: #000 1px 0 13px;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.badge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.badge-item:hover {
+  background-color: #f0f0f0;
 }

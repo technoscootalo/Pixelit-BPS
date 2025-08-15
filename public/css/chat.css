@@ -4,6 +4,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 .bg_img {
   position: fixed;
   width: 250%;
@@ -77,10 +78,6 @@ body {
   width: 10%;
   size: 10%;
 }
-*
-{
-  box-sizing: border-box;
-}
 .container {
   position: relative;
   text-align: center;
@@ -127,8 +124,7 @@ body {
   font-family: 'Pixelify Sans';
 }
 .sendInput{
-  width: 150%;
-  height: 85%;
+  height: 30%;
   background: #6f057a;
   border-right: none;
   left: 0;
@@ -142,7 +138,9 @@ body {
   border-radius: 0px;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  min-width: 150px; 
+  width: 100%;
 }
 .chatContainer{
   width: 100%;
@@ -158,6 +156,7 @@ body {
   width: 100%;
   height: 10%;
   display: flex;
+  font-size: 12px;
   justify-content: left;
   align-items: center;
   margin-left: 6px;
@@ -168,16 +167,79 @@ body {
   height: auto;
   border-radius: 5px;
 }
-.messageContainer{
+.username{
+  font-size: 20px;
+}
+.chatImages {
+  border-radius: 5px;
+  margin-bottom: 0px;
+  object-position: bottom; 
+  object-fit: scale-down;
+  max-height: 70px;
+  max-width: 50vw;
+  break-after: always;
+  cursor: pointer;
+  break: all;  
+  box-shadow: 0 0 10px black;
+}
+/*
+.video {
+  border-radius: 5px;
+  margin-bottom: 0px;
+  object-position: bottom; 
+  object-fit: scale-down;
+  max-height: 6vw;
+  max-width: 25vw;
+  break-after: always;
+}
+*/
+.messageContainer {
   display: flex;
   flex-direction: column;
   gap: 0px;
-  scroll-height: 0%;
+  justify-content: flex-start; 
 }
 .usernameAndBadges{
   display: flex;
   gap: 5px;
 }
-.username{
-  font-size: 20px;
+.badge{
+  width: 25px;
+  height: auto;
+}
+.badges{
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.modal-content {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+.close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.close:hover,
+.close:focus {
+  color: red;
 }

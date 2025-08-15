@@ -111,7 +111,7 @@ body {
   width: 350px;
   height: 100px;
   display: block;
-  margin-left: 8%;
+  margin-left: 0%;
 }
 
 @media screen and (max-width: 600px) {
@@ -139,10 +139,10 @@ body {
 }
 #badges-container {
   margin-top: 10px;
-  padding: 9px;
+  padding: 7px;
   border-radius: 5px;
-  background-color: #5a0463;
-  box-shadow: inset 0 -0.365vw #4a0452, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  background-color: #6e057b;
+  box-shadow: inset 0 -0.365vw #5a0464, 3px 3px 15px rgba(0, 0, 0, 0.6);
   margin-left: 20px;
 }
 .button_container {

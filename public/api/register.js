@@ -14,16 +14,16 @@ function register(event) {
   event.preventDefault();
 
   const forbiddenChars = /[^a-zA-Z0-9_]/;
-  if (forbiddenChars.test(username.value) || username.value.length < 3 || username.value.length > 20) {
-    ge('error-message').textContent = 'Username must be 3-20 characters long and contain only letters, numbers, and underscores.';
+  if (forbiddenChars.test(username.value) || username.value.length < 3 || username.value.length > 16) {
+    ge('error-message').textContent = 'Username must be 3-16 characters long and contain only letters, numbers, and underscores.';
     ge('error-message').style.color = 'red';
     setTimeout(() => { ge('error-message').style.color = ''; }, 2000);
     return;
   }
 
   const passwordForbiddenChars = /[.\/\;\'\`\+\-]/;
-    if (password.value.length <= 8 || passwordForbiddenChars.test(password.value)) {
-    ge('error-message').textContent = 'Password must be at least 8 characters long and cannot contain invalid characters.';
+    if (password.value.length <= 8 || password.value.length >= 32 || passwordForbiddenChars.test(password.value)) {
+    ge('error-message').textContent = 'Password must be at least 8 characters long, no more than 32, and cannot contain invalid characters.';
     ge('error-message').style.color = 'red';
     setTimeout(() => { ge('error-message').style.color = ''; }, 2000);
     return;
