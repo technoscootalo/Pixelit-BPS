@@ -55,9 +55,11 @@ body {
   text-shadow: #000 1px 0 13px;
   transition: transform 0.3s ease-in-out;
 }
+
 .navbar a:hover {
   transform: rotate(360deg);
 }
+
 .title_p {
   margin-left: 92%;
   position: absolute;
@@ -66,11 +68,13 @@ body {
   color: #fff;
   text-shadow: #000 1px 0 13px;
 }
+
 @media screen and (max-width: 600px) {
   .title_p {
     display: none;
   }
 }
+
 .center {
   display: block;
   margin-left: auto;
@@ -78,11 +82,13 @@ body {
   width: 10%;
   size: 10%;
 }
+
 .container {
   position: relative;
   text-align: center;
   color: white;
 }
+
 .centered {
   position: absolute;
   top: 20%;
@@ -91,11 +97,13 @@ body {
   text-align: center;
   transform: translate(-50%, -50%);
 }
+
 .badge {
   display: inline-block;
   height: 100px;
   width: 100px;
 }
+
  .background{
    width: 100vw;
    height: 100vh;
@@ -103,6 +111,7 @@ body {
    top: 0;
    left: 0;
 }
+
 .profileBody{
   width: 100%;
   height: calc(100% - 4.52vh);
@@ -113,6 +122,7 @@ body {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 .inputContainer{
   position: relative;
   top: 1%;
@@ -123,6 +133,7 @@ body {
   border: none;
   font-family: 'Pixelify Sans';
 }
+
 .sendInput{
   height: 30%;
   background: #6f057a;
@@ -142,6 +153,7 @@ body {
   min-width: 150px; 
   width: 100%;
 }
+
 .chatContainer{
   width: 100%;
   overflow: auto;
@@ -152,6 +164,13 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.messageText {
+  word-wrap: break-word !important; 
+  overflow-wrap: break-word !important; 
+  white-space: normal !important; 
+}
+
 .message {
   width: 100%;
   height: auto;
@@ -164,22 +183,17 @@ body {
   cursor: pointer;
   position: relative;
 }
-.message:hover {
-  background-color: rgb(117, 117, 117, 0.3);
-  width: 1000%;
-  border-radius: 5px;
-  transition: background-color 0.1s ease;
-  height: auto;
-}
 
 .pfp img{
   width: 65px;
   height: auto;
   border-radius: 5px;
 }
+
 .username{
   font-size: 20px;
 }
+
 .chatImages {
   border-radius: 5px;
   margin-bottom: 0px;
@@ -252,8 +266,4 @@ body {
 .close:hover,
 .close:focus {
   color: red;
-}
-.mention {
-    background-color: rgba(255, 255, 0, 0.5);
-    border-radius: 5px;
 }

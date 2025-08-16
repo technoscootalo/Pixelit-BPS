@@ -260,12 +260,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function adjustInputHeight(input) {
-        input.style.height = 'auto'; 
-        input.style.height = `${input.scrollHeight}px`; 
+        input.style.height = '30%'; 
         const maxWidth = window.innerWidth * 0.9; 
         const currentWidth = Math.min(maxWidth, input.value.length * 10); 
         input.style.width = `100%`;
     }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const messagesContainer = document.querySelector('.chatContainer');
+
+    messagesContainer.addEventListener('mouseover', function(event) {
+        if (event.target.classList.contains('messageText')) {
+            event.target.style.wordBreak = 'break-word';
+            event.target.style.whiteSpace = 'normal'; 
+            event.target.style.overflowWrap = 'break-word'; 
+        }
+    });
+
+    messagesContainer.addEventListener('mouseout', function(event) {
+        if (event.target.classList.contains('messageText')) {
+            event.target.style.whiteSpace = 'normal'; 
+        }
+    });
 });
 
 document.addEventListener('DOMContentLoaded', function() {
