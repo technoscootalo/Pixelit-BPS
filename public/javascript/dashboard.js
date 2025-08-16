@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .then((response) => {
         if (!response.ok) {
             if (response.status === 401) {
-                alert("You are not logged in. Please log in to continue.");
                 window.location.href = "/login.html"; 
             } else {
                 return response.text().then(text => {
