@@ -156,11 +156,12 @@ function updateTokens() {
   socket.emit("getTokens", sessionStorage.username);
 }
 
-socket.on("tokens", (tokensr, sentr, messagesCount) => { 
+socket.on("tokens", (tokensr, sentr, messagesCount, packsOpenedr) => { 
     document.getElementById('tokens').textContent = formatNumber(tokensr);
     document.getElementById('messages').textContent = formatNumber(sentr);
     const messagesElement = document.getElementById('messages');
     messagesElement.textContent = formatNumber(messagesCount); 
+    document.getElementById('packs').textContent = formatNumber(packsOpenedr);
 });
 
 function formatNumber(num) {

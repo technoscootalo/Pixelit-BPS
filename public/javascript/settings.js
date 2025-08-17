@@ -75,10 +75,10 @@ document.addEventListener("DOMContentLoaded", async function() {
   }
 });
 
-document.getElementById('changePassword').addEventListener('click', function() {
+/*document.getElementById('changePassword').addEventListener('click', function() {
     const modal = createPasswordChangeModal();
     document.body.appendChild(modal);
-});
+}); */
 
 function createPasswordChangeModal() {
     const modal = document.createElement('div');

@@ -3,8 +3,8 @@ body {
   color: white;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
-
 .bg_img {
   position: fixed;
   width: 250%;
@@ -18,33 +18,13 @@ body {
   transform: translate(-50%, -50%) rotate(15deg);
   opacity: 0.1;
 }
-
 .navbar {
   overflow: hidden;
   background-color: #6f057a;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
 }
-
-@media screen and (max-width: 600px) {
-  .navbar {
-    border-radius: 0;
-    box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
-    width: 100%;
-  }
-  .navbar a, .dropdown .dropbtn {
-    float: none;
-    display: block;
-    padding: 10px;
-  }
-  .dropdown-content {
-    position: relative;
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-
 .navbar a {
   float: left;
   font-size: 16px;
@@ -59,7 +39,6 @@ body {
 .navbar a:hover {
   transform: rotate(360deg);
 }
-
 .title_p {
   margin-left: 92%;
   position: absolute;
@@ -67,12 +46,6 @@ body {
   font-size: 26px;
   color: #fff;
   text-shadow: #000 1px 0 13px;
-}
-
-@media screen and (max-width: 600px) {
-  .title_p {
-    display: none;
-  }
 }
 
 .welcome-title {
@@ -176,13 +149,6 @@ button:hover {
   left: 3%;
 }
 
-@media screen and (max-width: 600px) {
-  .user-action-container {
-    width: 80%;
-    left: 10%;
-  }
-}
-
 .server-stats-container {
   background-color: #5e046e;
   display: flex;
@@ -198,12 +164,6 @@ button:hover {
   transform: translate(-50%, -50%)
 }
 
-@media screen and (max-width: 600px) {
-  .server-stats-container {
-    display: none;
-  }
-}
-  
 .user-input-container {
   background-color: #5e046e;
   display: flex;
@@ -215,12 +175,4 @@ button:hover {
   box-shadow: inset 0 -0.365vw #53055c, 3px 3px 15px rgba(0, 0, 0, 0.6);
   position: absolute;
   right: 3%;
-}
-
-@media screen and (max-width: 600px) {
-  .user-input-container {
-    width: 80%;
-    right: 10%;
-    bottom: -20%;
-  }
 }
