@@ -1,5 +1,5 @@
 let users = [];
-let currentUserId;
+let currentUsername;
 
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/users')
@@ -47,7 +47,7 @@ function renderUserList(users) {
         userItem.innerHTML = `
             <strong>${user.username}</strong> (${user.role})
             <div class="badges">${(user.badges || []).map(badge => `<img src="${badge.image}" draggable="false" class="badge" style="width: 30px; height: 30px;"/>`).join('')}</div>
-            <button class="add-badge-btn" onclick="fetchBadgesForUser('${user.id}')">Add Badge</button>
+            <button class="add-badge-btn" onclick="fetchBadgesForUser('${user.username}')">Add Badge</button>
         `;
 
         userListFragment.appendChild(userItem);
@@ -56,13 +56,14 @@ function renderUserList(users) {
     userList.appendChild(userListFragment);
 }
 
-function fetchBadgesForUser(userId) {
-    currentUserId = userId; 
+let badges = []; 
+
+function fetchBadgesForUser(username) {
+    currentUsername = username; 
     fetch('/badges')
         .then(response => {
             console.log('Response status:', response.status);
             console.log('Response type:', response.headers.get('Content-Type'));
-
             if (!response.ok) {
                 throw new Error('Network response was not ok: ' + response.statusText);
             }
@@ -78,7 +79,7 @@ function fetchBadgesForUser(userId) {
         });
 }
 
-function openModal(badges) {
+function openModal(badgesList) {
     const modal = document.createElement('div');
     modal.id = 'badgeModal';
     modal.style.cssText = `
@@ -95,7 +96,6 @@ function openModal(badges) {
         flex-direction: column;
         align-items: center;
     `;
-
     const badgeContainer = document.createElement('div');
     badgeContainer.style.cssText = `
         display: flex;
@@ -103,8 +103,7 @@ function openModal(badges) {
         justify-content: center;
         gap: 10px;
     `;
-
-    badges.forEach(badge => {
+    badgesList.forEach(badge => {
         const badgeImage = document.createElement('img');
         badgeImage.src = badge.image;
         badgeImage.style.cssText = `
@@ -112,20 +111,17 @@ function openModal(badges) {
             height: 50px;
             cursor: pointer;
         `;
-        badgeImage.onclick = () => addBadgeToUser(badge.id);
+        badgeImage.onclick = () => addBadgeToUser(badge);
         badgeContainer.appendChild(badgeImage);
     });
-
     const closeButton = document.createElement('button');
     closeButton.textContent = 'Close';
     closeButton.onclick = closeModal;
     closeButton.style.marginTop = '10px';
-
     modal.appendChild(badgeContainer);
     modal.appendChild(closeButton);
     document.body.appendChild(modal);
 }
-
 function closeModal() {
     const modal = document.getElementById('badgeModal');
     if (modal) {
@@ -133,12 +129,18 @@ function closeModal() {
     }
 }
 
-
-function addBadgeToUser(badgeId) {
+function addBadgeToUser(badge) {
+    const badgeData = {
+        username: currentUsername,
+        badge: {
+            name: badge.name,
+            image: badge.image
+        }
+    };
     fetch('/add-badge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, badgeId })
+        body: JSON.stringify(badgeData)
     })
     .then(response => {
         if (!response.ok) {

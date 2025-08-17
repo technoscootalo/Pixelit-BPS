@@ -49,16 +49,14 @@ function fetchJSON(url, options = {}) {
   });
 }
 
-
-
 function updateBlookInfo(blook, packName) {
   const { name = "Unknown Blook", imageUrl, rarity = "Unknown", owned = 0 } = blook;
 
   blookName.textContent = name;
+  blookRarity.innerHTML = getRaritySpan(rarity);
   blookImage.src = owned > 0 ? `${imageUrl}` : "";
   blookImage.style.display = owned > 0 ? "block" : "none";
-  blookRarity.innerHTML = getRaritySpan(rarity);
-  blookOwned.textContent = `Owned: ${owned}`;
+  blookOwned.textContent = `${owned} Owned`;
   setPfpButton.style.display = "block";
   sellButton.style.display = owned > 0 ? "block" : "none";
 
@@ -113,14 +111,33 @@ function generatePacksHTML(packsData) {
         const badge = document.createElement("div");
         badge.classList.add("badge");
         badge.textContent = blook.owned;
-        badge.style.textShadow = "1px 1px 2px black";
+        badge.style.textShadow = "-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black";
         badge.style.backgroundColor = RARITY_COLORS[blook.rarity.toLowerCase()];
         itemDiv.appendChild(badge);
+
+        itemDiv.style.transition = "transform 0.2s ease-in-out";
+
+        itemDiv.addEventListener("mouseover", () => {
+          itemDiv.style.transform = "scale(0.9)";
+        });
+
+        itemDiv.addEventListener("mouseout", () => {
+          itemDiv.style.transform = "scale(1)";
+        });
+
+        itemDiv.addEventListener("mousedown", () => {
+          itemDiv.style.transform = "scale(0.8)";
+        });
+
+        itemDiv.addEventListener("mouseup", () => {
+          itemDiv.style.transform = "scale(1)";
+        });
 
         itemDiv.addEventListener("click", () => updateBlookInfo(blook, pack.name));
       } else {
         const lockIcon = document.createElement("i");
         lockIcon.classList.add("fa-solid", "fa-lock", "fa-2xl");
+        lockIcon.style.textShadow = "2px 2px 4px #000000";
         itemDiv.style.cursor = 'pointer';
         itemDiv.appendChild(lockIcon);
       }
@@ -136,8 +153,7 @@ function generatePacksHTML(packsData) {
 function sellBlook() {
   const name = blookName.textContent;
   const rarity = blookRarity.textContent.toLowerCase();
-  const owned = parseInt(blookOwned.textContent.split(": ")[1], 10);
-
+  const owned = parseInt(blookOwned.textContent.split(' ')[0], 10);
 
   const modal = document.createElement('div');
   modal.classList.add('modal');
@@ -175,7 +191,7 @@ function sellBlook() {
   const quantityInput = document.createElement('input');
   quantityInput.type = 'number';
   quantityInput.min = '1';
-  quantityInput.max = owned.toString();
+  quantityInput.max = owned;
   quantityInput.value = '1';
     quantityInput.style.cssText = `
     width: 70px;
@@ -299,7 +315,7 @@ function sellBlook() {
     .then(data => {
       if (data.success) {
         const newOwned = owned - quantityNumber;
-        blookOwned.textContent = `Owned: ${newOwned}`;
+        blookOwned.textContent = `${newOwned} Owned`;
         sellButton.style.display = newOwned <= 0 ? "none" : "block";
 
         if (newOwned <= 0) {
@@ -324,7 +340,8 @@ function sellBlook() {
             if (newOwned === 0) {
               itemDiv.innerHTML = "";
               const lockIcon = document.createElement("i");
-              lockIcon.classList.add("fa-solid", "fa-lock");
+              lockIcon.classList.add("fa-solid", "fa-lock", "fa-2xl");
+              lockIcon.style.textShadow = "2px 2px 4px #000000";
               itemDiv.appendChild(lockIcon);
             }
           }

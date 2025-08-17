@@ -57,7 +57,7 @@
         <h1 style="font-size: 26px;">Pack</h1>
         <div class="items">
           <div class="item">
-            <i class="fa-solid fa-lock"></i>
+            <i class="fa-solid fa-lock fa-2xl" style="text-shadow: 2px 2px 4px #000000;"></i>
             <div class="badge">0</div>
           </div>
         </div>
@@ -65,25 +65,27 @@
       </div>
     <div class="blook-details">
       <center>
-        <h1 id="blook-name">Select a Pixel</h1>
+        <h1 class="name" id="blook-name">Select a Pixel</h1>
+        <h2 id="blook-rarity"></h2>
         <img
           id="blook-image"
           src="https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png"
           alt="Blook Image"
           draggable="false"
-          style="display: none; width: 120px; height: 120px"
         />
-        <h3 id="blook-rarity"></h3>
-        <h3 id="blook-owned"></h3>
-        <div class="banner-container">
-        <button id="sell-blook" class="button-style smooth-hover" >
-          Sell Pixel 
-        </button>
-          </div>
-        <button id="set-pfp" class="button-style smooth-hover" >
-          Change Profile Picture
-        </button>
+        <br />
+        <br />
+        <h2 class="owned" id="blook-owned"></h2>
+        <div class="button-container">
         <div>
+          <button id="sell-blook" class="button-style smooth-hover" >
+           <i class="fa-solid fa-sack-dollar" style="font-size: 26px;"></i>
+            Sell
+          </button>
+            </div>
+          <button id="set-pfp" class="button-style smooth-hover" >
+           <i class="fa-solid fa-user" style="font-size: 26px;"></i> Profile
+          </button>
         </div>
         <div id="server-message"></div>
       </center>

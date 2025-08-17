@@ -60,11 +60,14 @@ function displayLeaderboard(users) {
   users.forEach((user, index) => {
     const userElement = document.createElement('div');
     userElement.className = 'leaderboard-item';
+
+    const textColor = user.role === "Owner" ? "black" : "white";
+    userElement.style.color = textColor; 
+
     userElement.innerHTML = `${index + 1}. ${user.username} - Tokens: ${user.tokens}`;
     leaderboardContainer.appendChild(userElement);
   });
 }
-
 function displayTopSenders(topSenders) {
   const leaderboardContainer = document.getElementById('leaderboardContainer');
   leaderboardContainer.innerHTML = '';

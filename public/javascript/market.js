@@ -38,10 +38,15 @@ async function fetchPacks() {
 function displayPacks(packs) {
   const packContainer = document.getElementById('packContainer');
   packContainer.innerHTML = '';
-  
-  packs.forEach(pack => {
+
+  packs.forEach((pack, index) => {
     const packElement = createPackElement(pack);
     packContainer.appendChild(packElement);
+
+    if ((index + 1) % 1 === 0) {
+      const br = document.createElement('br'); 
+      packContainer.appendChild(br); 
+    }
   });
 }
 
@@ -416,6 +421,12 @@ document.getElementById('displayRarity').addEventListener('click', async functio
       blookInfo.appendChild(raritySpan);
       blookInfo.appendChild(document.createTextNode(` ${blook.chance}%)`));
 
+      modalContent.onclick = (event) => {
+        if (event.target === modalContent) {
+          document.body.removeChild(modalContent);
+        }
+      };
+
       blookContainer.appendChild(blookImage);
       blookContainer.appendChild(blookInfo);
       modalContent.appendChild(blookContainer);
@@ -444,7 +455,11 @@ document.getElementById('displayRarity').addEventListener('click', async functio
   closeModal.onclick = () => {
     document.body.removeChild(modal);
   };
-
+  modal.onclick = (event) => {
+    if (event.target === modal) {
+      document.body.removeChild(modal);
+    }
+  };
   modalContent.appendChild(closeModal);
   modal.appendChild(modalContent);
   document.body.appendChild(modal);

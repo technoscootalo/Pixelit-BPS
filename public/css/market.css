@@ -95,7 +95,7 @@ body {
   background: radial-gradient(circle, #581060, #6f057a);
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 20px;
   text-align: center;
 }
 

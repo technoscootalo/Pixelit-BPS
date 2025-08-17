@@ -76,7 +76,7 @@ body {
 
 .container {
   width: 50%;
-  background-color: #6f057a;
+  background: radial-gradient(circle, #61056b, #6f057a);
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   padding: 15px;
   border-radius: 5px;
@@ -111,13 +111,17 @@ body {
 .badge {
   position: absolute;
   top: 75%;
-  right: -0%;
+  right: 4.7%;
   background-color: #ffffff;
   color: white;
   border-radius: 50%;
   padding: 3px 6px;
   font-size: 12px;
   font-weight: bold;
+  text-shadow: -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
 }
 
 .item {
@@ -136,11 +140,12 @@ body {
   cursor: pointer;
   border-radius: 5px;
 }
+
 .blook-details {
   position: absolute;
   top: 25%;
   right: 10%;
-  background-color: #6f057a;
+  background: radial-gradient(circle, #61056b, #6f057a);
   padding: 20px;
   border-radius: 5px;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
@@ -155,13 +160,29 @@ body {
   }
 }
 
+.name {
+  font-size: 32px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
+}
+
 .blook-details img {
+  width: 160px !important;
+  height: 160px !important;
   border-radius: 5px;
 }
 
-.blook-details h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.blook-details h2 {
+  font-size: 32px;
+  margin-top: -10px;
+  text-shadow: -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
 }
 
 .blook-details p {
@@ -170,23 +191,35 @@ body {
 
 
 .blook-details button {
-  margin-top: 10px;
+  margin-top: 0px;
   font-family: Pixelify Sans;
   padding: 12px 18px;
-  background-color: #8c099a;
+  background-color: #6f057a;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
   transition: background-color 0.5s ease-in-out, box-shadow 0.3s ease-in-out;
-  width: 100%;
+  width: 150px;
   box-sizing: border-box;
-  font-size: 18px;
+  font-size: 26px;
+  text-shadow: -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
+  display: inline-block;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .blook-details button:hover {
-    box-shadow: inset 0 -0.5vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 -0.5vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
 }
 
 .modal {
@@ -247,8 +280,8 @@ body {
 }
 
 .pixel-info img {
-  width: 80px;
-  height: 80px;
+  width: 160px;
+  height: 160px;
   margin-right: 10px;
 }
 
@@ -276,12 +309,12 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #6f057a;
+    background: #61056b;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #8c099a;
+    background-color: #6f057a;
     border-radius: 10px;
-    border: 3px solid #6f057a;
+    border: 3px solid #61056b;
 }

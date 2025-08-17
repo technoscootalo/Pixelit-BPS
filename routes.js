@@ -1022,18 +1022,20 @@ router.get("/badges", async (req, res) => {
 });
 
 router.post("/add-badge", async (req, res) => {
-    const { userId, badgeId } = req.body;
+    console.log("Request body:", req.body);
+    const { userId, badge } = req.body;
 
     try {
         const user = await users.findOne({ _id: ObjectId(userId) });
         if (!user) {
             return res.status(404).send("User not found");
         }
-        const badge = await badges.findOne({ _id: ObjectId(badgeId) });
-        if (!badge) {
-            return res.status(404).send("Badge not found");
-        }
-        const updatedBadges = [...(user.badges || []), badge];
+
+        const updatedBadges = [...(user.badges || []), {
+            name: badge.name,
+            image: badge.image
+        }];
+
         await users.updateOne({ _id: ObjectId(userId) }, { $set: { badges: updatedBadges } });
         res.status(200).send("Badge added successfully!");
     } catch (error) {

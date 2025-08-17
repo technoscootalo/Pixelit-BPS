@@ -82,7 +82,7 @@ async function run() {
     await client.connect();
     await client.db(db_name).command({ ping: 1 });
     requests = await client.db(db_name).collection("requests").find().toArray();
-    console.log(" Successfully connected to the database");
+    console.log("Successfully connected to the database");
   } catch (e) {
     console.log(e);
   }
@@ -138,7 +138,7 @@ io.on("connection", (socket) => {
           console.log("getting response");
 
           const response = await axios.get(
-              "https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/user",
+              "https://pixelit.club/user",
               {
                   headers: {
                       Cookie: cookief,
@@ -189,7 +189,7 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
   console.log(`Server started successfully on port ${port}`);
   console.log(`Server is running at ${process.env["DEV_LINK"]}:${port}`);
 });
