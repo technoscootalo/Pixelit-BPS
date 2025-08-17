@@ -57,17 +57,18 @@
             id="pfp"
             src="https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png"
             alt="pfp"
-            style="transition: transform 0.2s ease-in-out;"
-            onmouseover="this.style.transform = 'scale(0.9)';"
-            onmouseout="this.style.transform = 'scale(1)';"
-            onmousedown="this.style.transform = 'scale(0.8)';"
-            onmouseup="this.style.transform = 'scale(1)';"
+              style="transition: transform 0.2s ease-in-out;"
+              onmouseover="this.style.transform = 'scale(0.9)';"
+              onmouseout="this.style.transform = 'scale(1)';"
+              onmousedown="this.style.transform = 'scale(0.8)';"
+              onmouseup="this.style.transform = 'scale(1)';"
           />
           <div class="banner-container" style="transition: transform 0.2s ease-in-out;"
-            onmouseover="this.style.transform = 'scale(0.9)';"
-            onmouseout="this.style.transform = 'scale(1)';"
-            onmousedown="this.style.transform = 'scale(0.8)';"
-            onmouseup="this.style.transform = 'scale(1)';"
+              onmouseover="this.style.transform = 'scale(0.9)';"
+              onmouseout="this.style.transform = 'scale(1)';"
+              onmousedown="this.style.transform = 'scale(0.8)';"
+              onmouseup="this.style.transform = 'scale(1)';"
+>
             <img
               src="https://izumiihd.github.io/pixelitcdn/assets/img/banner/pixelitBanner.png"
               alt="Pixelit Banner"
@@ -77,7 +78,7 @@
             <div id="role">loading...</div>
           </div>
           <div id="badges-container">
-            <div id="badges" style="margin-top: 10px"></div>
+            <div id="badges" style="margin-top: 0px"></div>
           </div>
         </div>
         <div class="button_container" style="margin-left: 0px; margin-top: 60px">
@@ -119,46 +120,54 @@
           </div>
           <div class="inner_stat_container">
             <div class="token_stat_box">
-              Tokens:
-              <span id="tokens" style="margin-left: 10px">loading...</span>
+              <div style="text-align: center;">
+                <span style="font-size: 20px;">Tokens</span>
+                <br />
+                <span id="tokens" style="margin-left: 10px;  font-weight: bold; font-size: 28px;">loading...</span>
+              </div>
               <img
-                class="tokenImg"
                 src="https://izumiihd.github.io/pixelitcdn/assets/img/dashboard/token.png"
-                alt="Token Icon"
-                style="
-                  display: inline-block;
-                  width: 36px;
-                  height: 36px;
-                  margin-left: 10px;
-                  transform: rotate(20deg);
-                "
-              />
-            </div>
-            <div class="info_stat_box">
-              Packs Opened:
-              <span id="packs" style="margin-left: 10px">loading...</span>
-              <img
-                src="https://izumiihd.github.io/pixelitcdn/assets/img/dashboard/unlocked.png"
-                alt="Unlocked Icon"
+                alt="token"
                 style="
                   display: inline-block;
                   width: fit-content;
-                  height: 36px;
+                  height: 42px;
                   margin-left: 10px;
                   transform: rotate(20deg);
                 "
               />
             </div>
             <div class="info_stat_box">
-              Messages Sent:
-              <span id="messages" style="margin-left: 10px">loading...</span>
+              <div style="text-align: center;">
+                <span style="font-size: 20px;">Packs Opened</span>
+                <br />
+                <span id="packs" style="margin-left: 10px;  font-weight: bold; font-size: 28px;">loading...</span>
+              </div>
               <img
-                src="https://izumiihd.github.io/pixelitcdn/assets/img/dashboard/speech.png"
-                alt="Speech Icon"
+                src="https://izumiihd.github.io/pixelitcdn/assets/img/dashboard/unlocked.png"
+                alt="unlocked"
                 style="
                   display: inline-block;
-                  width: 36px;
-                  height: 36px;
+                  width: fit-content;
+                  height: 46px;
+                  margin-left: 10px;
+                  transform: rotate(20deg);
+                "
+              />
+            </div>
+            <div class="info_stat_box">
+              <div style="text-align: center;">
+                <span style="font-size: 20px;">Messages</span>
+                <br />
+                <span id="messages" style="margin-left: 10px; font-weight: bold; font-size: 28px;">loading...</span>
+              </div>
+              <img
+                src="https://izumiihd.github.io/pixelitcdn/assets/img/dashboard/speech.png"
+                alt="Messages"
+                style="
+                  display: inline-block;
+                  width: fit-content;
+                  height: 46px;
                   margin-left: 10px;
                   transform: rotate(20deg);
                 "

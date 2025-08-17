@@ -101,33 +101,48 @@ fetch("/user")
     usernameElement.innerHTML = user.username;
     
     if (user.role === "Owner") {
-      usernameElement.style.color = "black";
-      ge("role").style.color = "black";
+      usernameElement.style.color = "#020202";
+      ge("role").style.color = "#020202";
+    }
+    if (user.role === "Veteran") {
+      usernameElement.style.color = "#969a5c";
+      ge("role").style.color = "#969a5c";
+
+    }
+    if (user.role === "Verified") {
+      usernameElement.style.color = "#5ab65b";
+      ge("role").style.color = "#5ab65b";
+
     }
     if (user.role === "Tester") {
-      usernameElement.style.color = "#24e2d8";
-      ge("role").style.color = "#24e2d8";
+      usernameElement.style.color = "#80a1d3";
+      ge("role").style.color = "#80a1d3";
 
     }
     if (user.role === "Helper") {
-      usernameElement.style.color = "#1973a0";
-      ge("role").style.color = "#1973a0";
+      usernameElement.style.color = "#4b69c3";
+      ge("role").style.color = "#4b69c3";
 
     }
     if (user.role === "Moderator") {
-      usernameElement.style.color = "#5e046e";
-      ge("role").style.color = "#5e046e";
+      usernameElement.style.color = "#ab53c4";
+      ge("role").style.color = "#ab53c4";
 
     }
     if (user.role === "Admin") {
-      usernameElement.style.color = "#bd0404";
-      ge("role").style.color = "#bd0404";
+      usernameElement.style.color = "#dc6dc1";
+      ge("role").style.color = "#dc6dc1";
 
     }
     if (user.role === "Developer") {
-      usernameElement.style.color = "#064e13";
-      ge("role").style.color = "#064e13";
+      usernameElement.style.color = "#6a76c7";
+      ge("role").style.color = "#6a76c7";
       
+    }
+    if (user.role === "Artist") {
+      usernameElement.style.color = "#ca964c";
+      ge("role").style.color = "#ca964c";
+
     }
   })
 

@@ -113,10 +113,10 @@ async function addSpinClickListener() {
                 spinButton.style.display = 'none'; 
 
             } else {
-                showModal('Error: ' + data.message);
+                showModal('' + data.message);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error', error);
             showModal('An error occurred while spinning.');
         }
     });

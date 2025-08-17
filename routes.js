@@ -1023,12 +1023,16 @@ router.get("/badges", async (req, res) => {
 
 router.post("/add-badge", async (req, res) => {
     console.log("Request body:", req.body);
-    const { userId, badge } = req.body;
+    const { username, badge } = req.body;
 
     try {
-        const user = await users.findOne({ _id: ObjectId(userId) });
+        if (!username || !badge) {
+            return res.status(400).json({ message: "Username and badge data are required" }); 
+        }
+
+        const user = await users.findOne({ username: username });
         if (!user) {
-            return res.status(404).send("User not found");
+            return res.status(404).json({ message: "User not found" });
         }
 
         const updatedBadges = [...(user.badges || []), {
@@ -1036,11 +1040,11 @@ router.post("/add-badge", async (req, res) => {
             image: badge.image
         }];
 
-        await users.updateOne({ _id: ObjectId(userId) }, { $set: { badges: updatedBadges } });
-        res.status(200).send("Badge added successfully!");
+        await users.updateOne({ username: username }, { $set: { badges: updatedBadges } });
+        res.status(200).json({ message: "Badge added successfully!" }); 
     } catch (error) {
         console.error("Error adding badge:", error);
-        res.status(500).send("Error adding badge");
+        res.status(500).json({ message: "Error adding badge: " + error.message }); 
     }
 });
 

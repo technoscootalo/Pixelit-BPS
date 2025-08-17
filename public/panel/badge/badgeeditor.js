@@ -131,12 +131,13 @@ function closeModal() {
 
 function addBadgeToUser(badge) {
     const badgeData = {
-        username: currentUsername,
+        username: currentUsername, 
         badge: {
             name: badge.name,
             image: badge.image
         }
     };
+
     fetch('/add-badge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -144,7 +145,9 @@ function addBadgeToUser(badge) {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Failed to add badge');
+            return response.json().then(err => {
+                throw new Error(err.message);
+            });
         }
         return response.json();
     })
@@ -154,9 +157,11 @@ function addBadgeToUser(badge) {
     })
     .catch(error => {
         console.error('Error adding badge:', error);
+        alert('Failed to add badge: ' + error.message);
     });
 }
 
+// Badge order [OG, ]
 
 function levenshteinDistance(a, b) {
     const matrix = [];

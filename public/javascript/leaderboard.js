@@ -59,15 +59,53 @@ function displayLeaderboard(users) {
 
   users.forEach((user, index) => {
     const userElement = document.createElement('div');
-    userElement.className = 'leaderboard-item';
-
-    const textColor = user.role === "Owner" ? "black" : "white";
-    userElement.style.color = textColor; 
+    userElement.className = 'leaderboard-item'; 
 
     userElement.innerHTML = `${index + 1}. ${user.username} - Tokens: ${user.tokens}`;
     leaderboardContainer.appendChild(userElement);
   });
 }
+
+function renderUser(user) {
+    const usernameElement = ge("username");
+    usernameElement.innerHTML = user.username;
+
+    const roleElement = ge("role");
+    roleElement.innerHTML = user.role;
+
+    if (user.role === "Owner") {
+        usernameElement.style.color = "#020202";
+        roleElement.style.color = "#020202";
+    } else if (user.role === "Veteran") {
+        usernameElement.style.color = "#969a5c";
+        roleElement.style.color = "#969a5c";
+    } else if (user.role === "Verified") {
+        usernameElement.style.color = "#5ab65b";
+        roleElement.style.color = "#5ab65b";
+    } else if (user.role === "Tester") {
+        usernameElement.style.color = "#80a1d3";
+        roleElement.style.color = "#80a1d3";
+    } else if (user.role === "Helper") {
+        usernameElement.style.color = "#4b69c3";
+        roleElement.style.color = "#4b69c3";
+    } else if (user.role === "Moderator") {
+        usernameElement.style.color = "#ab53c4";
+        roleElement.style.color = "#ab53c4";
+    } else if (user.role === "Admin") {
+        usernameElement.style.color = "#dc6dc1";
+        roleElement.style.color = "#dc6dc1";
+    } else if (user.role === "Developer") {
+        usernameElement.style.color = "#6a76c7";
+        roleElement.style.color = "#6a76c7";
+    } else if (user.role === "Artist") {
+        usernameElement.style.color = "#ca964c";
+        roleElement.style.color = "#ca964c";
+    } else {
+        usernameElement.style.color = "white"; 
+        roleElement.style.color = "white";      
+    }
+}
+
 function displayTopSenders(topSenders) {
   const leaderboardContainer = document.getElementById('leaderboardContainer');
   leaderboardContainer.innerHTML = '';
