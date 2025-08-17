@@ -204,7 +204,6 @@ body {
   break-after: always;
   cursor: pointer;
   break: all;  
-  box-shadow: 0 0 10px black;
 }
 /*
 .video {

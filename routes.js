@@ -874,7 +874,11 @@ router.get("/leaderboard", async (req, res) => {
     try {
         const usersList = await users.find().toArray();
         const leaderboard = usersList
-            .map(user => ({ username: user.username, tokens: user.tokens }))
+            .map(user => ({
+                username: user.username,
+                role: user.role,  
+                tokens: user.tokens
+            }))
             .sort((a, b) => b.tokens - a.tokens) 
             .slice(0, 10); 
 
@@ -883,15 +887,19 @@ router.get("/leaderboard", async (req, res) => {
         console.error('Error fetching leaderboard:', error);
         res.status(500).send("Internal Server Error");
     }
-});
+});;
 
 router.get("/top-senders", async (req, res) => {
     try {
         const usersList = await users.find().toArray();
         const topSenders = usersList
-            .map(user => ({ username: user.username, sent: user.sent }))
-            .sort((a, b) => b.sent - a.sent) 
-            .slice(0, 10); 
+            .map(user => ({
+                username: user.username,
+                role: user.role,  
+                sent: user.sent
+            }))
+            .sort((a, b) => b.sent - a.sent)
+            .slice(0, 10);
 
         res.status(200).json(topSenders);
     } catch (error) {
