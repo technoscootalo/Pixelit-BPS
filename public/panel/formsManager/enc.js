@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 function renderAccountRequests() {
   const container = document.getElementById("requests");
   container.innerHTML = "";
-  const header = document.createElement("h2");
-  header.textContent = "Requests";
+  const header = document.createElement("h1");
+  header.textContent = "Forms";
   container.appendChild(header);
 
   if (Object.keys(accountRequests).length === 0) {
@@ -53,24 +53,43 @@ function renderAccountRequests() {
 
       const usernameDiv = document.createElement("div");
       usernameDiv.classList.add("attribute");
-      const usernameText = document.createTextNode(`Username: ${request.username}`);
+      const usernameLabel = document.createElement("div");
+      usernameLabel.textContent = "Username";
+      usernameDiv.appendChild(usernameLabel);
+      const usernameText = document.createElement("div");
+      usernameText.textContent = `${request.username}`;
       usernameDiv.appendChild(usernameText);
 
       const discordDiv = document.createElement("div");
       discordDiv.classList.add("attribute");
-      const discordText = document.createTextNode(`Discord: ${request.discord}`);
+      const discordLabel = document.createElement("div");
+      discordLabel.textContent = "Discord";
+      discordDiv.appendChild(discordLabel);
+      const discordText = document.createElement("div");
+      discordText.textContent = `${request.discord}`;
       discordDiv.appendChild(discordText);
-
+      
+      const br2 = document.createElement("br");
+      div.appendChild(br2);
+      
       const ageDiv = document.createElement("div");
       ageDiv.classList.add("attribute");
-      const ageText = document.createTextNode(`Age: ${request.age}`);
+      const ageLabel = document.createElement("div");
+      ageLabel.textContent = "Age";
+      ageDiv.appendChild(ageLabel);
+      const ageText = document.createElement("div");
+      ageText.textContent = `${request.age}`;
       ageDiv.appendChild(ageText);
-
+      
       const reasonDiv = document.createElement("div");
       reasonDiv.classList.add("attribute");
-      const reasonText = document.createTextNode(`Reason: ${request.reason}`);
+      const reasonLabel = document.createElement("div");
+      reasonLabel.textContent = "Reason";
+      reasonDiv.appendChild(reasonLabel);
+      const reasonText = document.createElement("div");
+      reasonText.textContent = `${request.reason}`;
       reasonDiv.appendChild(reasonText);
-
+        
       const declineButton = document.createElement("button");
       declineButton.classList.add("button", "decline");
       declineButton.style.marginRight = "10px";
@@ -109,7 +128,6 @@ function renderAccountRequests() {
     }
   }
 }
-
 
 function handleRequest(request, accepted) {
   const formBody = {'username': request.username, 'discord': request.discord, 'password': request.password, 'salt': request.salt, 'accepted': accepted}

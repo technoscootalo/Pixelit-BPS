@@ -76,6 +76,7 @@ const badges = db.collection("badges");
 const news = db.collection("news");
 const chatm = db.collection("chat");
 const packs = db.collection("packs");
+const auditCollection = db.collection("audits");
 
 async function run() {
   try {
@@ -177,6 +178,33 @@ io.on("connection", (socket) => {
       } catch (error) {
           console.error("Error during message handling:", error);
       }
+  });
+
+  socket.on("logFilteredMessage", async (data) => {
+      const { username, message, timestamp } = data;
+      try {
+          await client.connect();
+          const db = client.db(db_name);
+          const auditCollection = db.collection("audits");
+          const logEntry = {
+              username: username,
+              message: message,
+              timestamp: new Date(timestamp)
+          };
+
+          const result = await auditCollection.insertOne(logEntry);
+          console.log("Logged filtered message:", logEntry);
+          console.log("Insert Result:", result); 
+      } catch (error) {
+          console.error("Error logging message:", error.message); 
+      } finally {
+          await client.close(); 
+      }
+  });
+
+  socket.on("getAuditLogs", async () => {
+      const logs = await auditCollection.find().toArray();
+      socket.emit("auditLogs", logs);
   });
   
   socket.on("getNews", async () => {

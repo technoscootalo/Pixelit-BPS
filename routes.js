@@ -32,7 +32,8 @@ const RARITY_VALUES = {
   rare: 20,
   epic: 75,
   legendary: 200,
-  chroma: 300 
+  chroma: 300,
+  mystical: 1000,
 };
 
 function rand(min, max) {

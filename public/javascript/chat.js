@@ -218,36 +218,47 @@ function updateMessages(newMessages) {
 
 const byte = (str) => new Blob([str]).size;
 
-document.addEventListener('DOMContentLoaded', function() {
-    const socket = io();
-    console.log("Chat has been successfully loaded!");
+    document.addEventListener('DOMContentLoaded', function() {
+        const socket = io();
+        console.log("Chat has been successfully loaded!");
+        const sendInput = ge("send");
+        const filteredWords = ["nigger", "faggot"];
+        sendInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                const msg = e.target.value.trim();
+                if (msg === "") {
+                    e.target.value = "";
+                    return;
+                }
+                if (byte(msg) > 1000) {
+                    alert("Message is too long!");
+                    e.target.value = "";
+                    return;
+                }
 
-    const sendInput = ge("send");
-    sendInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            const msg = e.target.value.trim();
-            if (msg === "") {
+                const timestamp = Date.now();
+                const chatMessage = { sender: username, msg, badges, pfp, timestamp };
+                const lowerCaseMessage = msg.toLowerCase();
+                const containsFilteredWord = filteredWords.some(word => lowerCaseMessage.includes(word));
+                if (containsFilteredWord) {
+                    alert("Inappropriate language detected!");
+                    socket.emit("logFilteredMessage", {
+                        username: username,
+                        message: msg,
+                        timestamp: timestamp
+                    });
+                    e.target.value = ""; 
+                    return; 
+                }
+                const messageHTML = createMessageHTML(chatMessage);
+                const messagesContainer = ge("chatContainer");
+                messagesContainer.innerHTML += messageHTML;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                socket.emit("message", chatMessage);
                 e.target.value = "";
-                return;
             }
-            if (byte(msg) > 1000) {
-                alert("Message is too long!");
-                e.target.value = "";
-                return;
-            }
-             const timestamp = Date.now();
-            const chatMessage = { sender: username, msg, badges, pfp, timestamp };
-            const messageHTML = createMessageHTML(chatMessage);
-            const messagesContainer = ge("chatContainer");
-            messagesContainer.innerHTML += messageHTML;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            socket.emit("message", chatMessage);
-            e.target.value = "";
-        } else {
-            adjustInputHeight(sendInput);
-        }
-    });
+        });
 
     socket.emit("getChat");
 
