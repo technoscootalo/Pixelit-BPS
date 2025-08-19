@@ -30,6 +30,21 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+    if (!req.path.endsWith('/') && !req.path.includes('.')) {
+        req.url += '.html';
+    }
+    next();
+});
+
+app.use((req, res, next) => {
+    if (req.path.endsWith('.html')) {
+        const newPath = req.path.slice(0, -5);
+        req.url = newPath;
+    }
+    next();
+});
+
+app.use((req, res, next) => {
   if (req.path !== '/' && req.path.startsWith('/site/')) {
     req.url = req.url.replace('/site', '');
   }

@@ -56,7 +56,7 @@ function login(event) {
       }, 500);
 
       setTimeout(() => {
-        window.location.href = '/dashboard.html'; 
+        window.location.href = '/dashboard'; 
       }, 2000);
     } else if (status === 401) {
       errorMsg.style.color = "red";

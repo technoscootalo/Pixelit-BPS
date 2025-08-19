@@ -21,7 +21,7 @@ const RARITY_VALUES = {
   epic: 75,
   legendary: 200,
   chroma: 300,
-  mystical: 1000,
+  mystical: 1000
 };
 
 function refreshPackDisplay() {

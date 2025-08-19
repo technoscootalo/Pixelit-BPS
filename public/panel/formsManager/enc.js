@@ -41,7 +41,7 @@ function renderAccountRequests() {
   container.innerHTML = "";
   const header = document.createElement("h1");
   header.textContent = "Forms";
-  container.appendChild(header);
+  container.appendChild(header);  
 
   if (Object.keys(accountRequests).length === 0) {
     createNoRequestsDiv(container);
