@@ -73,7 +73,8 @@ body {
 
 .leaderboard_Container {
   width: 75%;
-  height: 700px;
+  height: 80%;
+  margin-top: 5vh;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -90,7 +91,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
 @media screen and (max-width: 600px) {

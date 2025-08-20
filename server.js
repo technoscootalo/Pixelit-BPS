@@ -30,16 +30,8 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    if (!req.path.endsWith('/') && !req.path.includes('.')) {
-        req.url += '.html';
-    }
-    next();
-});
-
-app.use((req, res, next) => {
     if (req.path.endsWith('.html')) {
-        const newPath = req.path.slice(0, -5);
-        req.url = newPath;
+        req.url = req.path.replace(/.html$/, '');
     }
     next();
 });
@@ -55,6 +47,12 @@ app.use((req, res, next) => {
     return res.redirect(301, req.path.slice(0, -5));
   }
   next();
+});
+
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/home.");
 });
 
 const byte = (str) => {
@@ -112,12 +110,6 @@ app.use(router);
 
 const port = 3000;
 const encpass = process.env["encpass"];
-
-app.use(express.static("public"));
-
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/home.");
-});
 
 io.on("connection", (socket) => {
   console.log("A user connected");
