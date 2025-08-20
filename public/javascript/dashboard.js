@@ -1,11 +1,8 @@
-const socket = io();
-
 const username = ge("username");
 const tokens = ge("tokens");
 const sent = ge("messages");
 const spin = ge("spin");
 const packsOpened = ge("packs");
-
 
 if (localStorage.loggedin == "true") {
   sessionStorage = localStorage;

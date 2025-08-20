@@ -76,13 +76,11 @@ async function run() {
 run().catch(console.dir);
 
 const db = client.db(db_name);
+const newsCollection = db.collection("news");
 const users = db.collection("users");
 const badges = db.collection("badges");
-const news = db.collection("news");
 const chatm = db.collection("chat");
 const packs = db.collection("packs");
-const newsCollection = db.collection("news");
-const spinsCollection = db.collection("spins");
 
 async function hashPassword(password) {
   const saltRounds = 10;

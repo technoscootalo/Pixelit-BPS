@@ -218,6 +218,27 @@ io.on("connection", (socket) => {
     const newsPosts = await news.find().toArray();
     socket.emit("getNews", newsPosts);
   });
+
+  socket.on("postNews", async (data) => {
+    const { title, content } = data;
+    if (!title || !content) {
+      socket.emit("error", "Title and content are required.");
+      return;
+    }
+    try {
+      const newPost = {
+        title,
+        content,
+        date: new Date().toLocaleString()
+      };
+      const result = await news.insertOne(newPost);
+      socket.emit("newsPosted", result.ops[0]); 
+    } catch (error) {
+      console.error("Error posting news:", error);
+      socket.emit("error", "Error posting news.");
+    }
+  });
+
   
   socket.on("disconnect", () => {
     console.log("User disconnected");

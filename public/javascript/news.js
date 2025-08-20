@@ -25,18 +25,11 @@ function createNewsPost(author, date, header, content) {
 
   const br = document.createElement("br");
   postContainer.appendChild(br);
-
-  const authorCenter = document.createElement("center");
-  const authorElement = document.createElement("div");
-  authorElement.classList.add("author");
-  authorElement.innerHTML = `Author: ${author} <i class="fa-solid fa-user"></i>`;
-  authorCenter.appendChild(authorElement);
-  postContainer.appendChild(authorCenter);
   
   const dateCenter = document.createElement("center");
   const dateElement = document.createElement("div");
   dateElement.classList.add("date");
-  dateElement.innerHTML = `Date: ${date} <i class="fa-solid fa-calendar-days"></i>`;
+  dateElement.innerHTML = `${date} <i class="fa-solid fa-calendar-days"></i>`;
   dateCenter.appendChild(dateElement);
   postContainer.appendChild(dateCenter);
 
@@ -67,5 +60,3 @@ socket.on("getNews", (posts) => {
 });
 
 socket.emit("getNews");
-
-document.getElementById("author").username = sessionStorage.username;

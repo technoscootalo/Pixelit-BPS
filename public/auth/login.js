@@ -1,4 +1,3 @@
-const socket = io();
 
 function ge(id) {
   return document.getElementById(id);
