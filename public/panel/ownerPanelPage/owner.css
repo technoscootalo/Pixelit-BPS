@@ -62,3 +62,7 @@ body {
   text-decoration: none;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
+.button:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+}
