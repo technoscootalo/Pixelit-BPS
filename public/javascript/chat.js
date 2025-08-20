@@ -218,49 +218,56 @@ function updateMessages(newMessages) {
 
 const byte = (str) => new Blob([str]).size;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const socket = io();
-        console.log("Chat has been successfully loaded!");
-        const sendInput = ge("send");
-        const filteredWords = ["nigger", "faggot"];
-        sendInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                const msg = e.target.value.trim();
-                if (msg === "") {
-                    e.target.value = "";
-                    return;
-                }
-                if (byte(msg) > 1000) {
-                    alert("Message is too long!");
-                    e.target.value = "";
-                    return;
-                }
+document.addEventListener('DOMContentLoaded', function() {
+    const socket = io();
+    console.info("Chat service initialized and connection established.");
+    const sendInput = ge("send"); 
+    const filteredWords = ["nigger", "nigga", "chink", "tranny", "faggot"];
+    let lastMessageTime = 0; 
 
-                const timestamp = Date.now();
-                const chatMessage = { sender: username, msg, badges, pfp, timestamp };
-                const lowerCaseMessage = msg.toLowerCase();
-                const containsFilteredWord = filteredWords.some(word => lowerCaseMessage.includes(word));
-                if (containsFilteredWord) {
-                    alert("Inappropriate language detected!");
-                    socket.emit("logFilteredMessage", {
-                        username: username,
-                        message: msg,
-                        timestamp: timestamp
-                    });
-                    e.target.value = ""; 
-                    return; 
-                }
-                const messageHTML = createMessageHTML(chatMessage);
-                const messagesContainer = ge("chatContainer");
-                messagesContainer.innerHTML += messageHTML;
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                socket.emit("message", chatMessage);
+    sendInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const msg = e.target.value.trim();
+            if (msg === "") {
                 e.target.value = "";
+                return;
             }
-        });
+            if (byte(msg) > 1000) {
+                alert("Message is too long!");
+                e.target.value = "";
+                return;
+            }
 
-    socket.emit("getChat");
+            const currentTime = Date.now();
+            if (currentTime - lastMessageTime < 2000) {
+                return;
+            }
+
+            const timestamp = currentTime;
+            const chatMessage = { sender: username, msg, badges, pfp, timestamp };
+            const lowerCaseMessage = msg.toLowerCase();
+            const containsFilteredWord = filteredWords.some(word => lowerCaseMessage.includes(word));
+            if (containsFilteredWord) {
+                alert("Your message has been flagged for inappropriate content and has been logged in the audit logs for staff to review.");
+                socket.emit("logFilteredMessage", {
+                    username: username,
+                    message: msg,
+                    timestamp: timestamp
+                });
+                e.target.value = ""; 
+                return; 
+            }
+
+            const messageHTML = createMessageHTML(chatMessage); 
+            const messagesContainer = ge("chatContainer");
+            messagesContainer.innerHTML += messageHTML;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            socket.emit("message", chatMessage);
+            e.target.value = "";
+            lastMessageTime = currentTime;
+        }
+    });
 
     socket.on("chatupdate", (data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -277,6 +284,8 @@ const byte = (str) => new Blob([str]).size;
         const currentWidth = Math.min(maxWidth, input.value.length * 10); 
         input.style.width = `100%`;
     }
+
+    socket.emit("getChat");
 });
 
 

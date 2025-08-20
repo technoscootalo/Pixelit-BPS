@@ -148,6 +148,7 @@ body {
   width: 35px;
   user-drag: none;
   -webkit-user-drag: none;
+  cursor: pointer;
   margin-right: 5px;
 }
 .button_container {

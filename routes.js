@@ -545,7 +545,7 @@ router.post("/spin", async (req, res) => {
         const now = Date.now();
 
         if (user.claimed && now - user.lastSpin < 8 * 3600000) { 
-            return res.status(429).json({ message: "Tokens have already been claimed. Please wait for the next 8 hours." });
+            return res.status(429).json({ message: "Tokens have already been claimed. Please wait for the next 8 hours to be able to claim your tokens again!" });
         }
 
         const tokensWonRandom = [500, 600, 700, 800, 900, 1000][Math.floor(Math.random() * 6)];

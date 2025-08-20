@@ -184,6 +184,23 @@ body {
   width: 65px;
   height: auto;
   border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.pfp img:hover {
+  transform: scale(0.9);
+}
+
+.pfp img:mouseout {
+  transform: scale(1);
+}
+
+.pfp img:active {
+  transform: scale(0.8);
+}
+
+.pfp img:mouseup {
+    transform: scale(1);
 }
 
 .username{

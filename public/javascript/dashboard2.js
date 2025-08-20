@@ -107,7 +107,7 @@ async function addSpinClickListener() {
             if (data.message === "Spin successful") {
                 const newTokens = parseInt(tokensDisplay.textContent) + data.tokensWon;
                 tokensDisplay.textContent = newTokens;
-                showModal('Congratulations! You won ' + data.tokensWon + ' tokens!');
+                showModal('Congratulations! You won ' + data.tokensWon + ' tokens! You will be able to claim again in the next 8 hours.');
 
                 localStorage.setItem('lastClaimTime', Date.now());
                 spinButton.style.display = 'none'; 
