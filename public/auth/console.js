@@ -13,3 +13,7 @@ socket.on('connect', () => {
   console.log("Socket connection established. Successfully connected to Pixelit");
   console.log("Running Pixelit version [2.2.4]");
 });
+
+socket.on('disconnect', () => {
+  console.log('Socket connection lost. Disconnected from Pixelit');
+})

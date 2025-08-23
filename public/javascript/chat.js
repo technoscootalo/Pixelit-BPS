@@ -1,5 +1,3 @@
-socket.io
-
 function escapeHTML(str) {
     const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
@@ -7,8 +5,17 @@ function escapeHTML(str) {
 }
 
 function parseMessage(str) {
+    const emojiMap = {
+        ':sob:': '😭',
+        ':skull:': '💀',
+    };
+    Object.keys(emojiMap).forEach(shortcode => {
+        const regex = new RegExp(shortcode, 'g');
+        str = str.replace(regex, emojiMap[shortcode]);
+    });
     const safeStr = escapeHTML(str);
     const parsed = marked.parse(safeStr);
+
     return DOMPurify.sanitize(parsed);
 }
 
@@ -113,7 +120,6 @@ function createMessageHTML(message) {
     ).join("");
     const mediaUrlPattern = /(https?:\/\/[^\s]+\.(gif|jpeg|jpg|png|bmp|webp|svg|tiff|tif|ico)|data:image\/[a-zA-Z]+;base64,[^\s]+)/i;
     let messageContent;
-
     if (mediaUrlPattern.test(message.msg) && isValidUrl(message.msg)) {
         messageContent = `
             <img 
@@ -125,10 +131,11 @@ function createMessageHTML(message) {
     } else {
         messageContent = parseMessage(message.msg);
     }
-
+    messageContent = twemoji.parse(messageContent);
     const formattedTime = formatTimestamp(message.timestamp);
-    const timestampHTML = formattedTime ? `<span class="timestamp" style="font-size: 10px;">${formattedTime}</span>` : `<span class="timestamp" style="font-size: 10px;">Invalid Date</span>`;
-
+    const timestampHTML = formattedTime ? 
+        `<span class="timestamp" style="font-size: 10px;">${formattedTime}</span>` : 
+        `<span class="timestamp" style="font-size: 10px;">Invalid Date</span>`;
     return `
     <div class="message">
         <div class="pfp">
@@ -151,6 +158,7 @@ function createMessageHTML(message) {
     <br>
     <br>`;
 }
+
 
 function openModal(imageSrc) {
     const modal = document.getElementById("imageModal");
@@ -275,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (Array.isArray(data) && data.length > 0) {
             messages = data;
             updateMessages(messages);
+            twemoji.parse(document.body); 
             const messagesContainer = ge("chatContainer");
             messagesContainer.scrollTop = messagesContainer.scrollHeight;  
         }

@@ -5,6 +5,7 @@ const blookOwned = document.getElementById("blook-owned");
 const sellButton = document.getElementById("sell-blook");
 const container = document.querySelector(".container");
 const setPfpButton = document.getElementById("set-pfp");
+const giftButton = document.getElementById("gift");
 
 const RARITY_COLORS = {
   uncommon: "#4bc22e",
@@ -37,17 +38,20 @@ function getRaritySpan(rarity) {
   return `<span style='color: ${color};'>${rarity.charAt(0).toUpperCase() + rarity.slice(1)}</span>`;
 }
 
-function fetchJSON(url, options = {}) {
-  return fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers
+async function fetchJSON(url, options = {}) {
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...options.headers
+        }
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
-  }).then(response => {
-    if (!response.ok) throw new Error(response.statusText);
     return response.json();
-  });
 }
 
 function updateBlookInfo(blook, packName) {
@@ -534,3 +538,170 @@ function changeProfilePicture(blookName, imageUrl, packName) {
     document.body.removeChild(modal);
   };
 }
+
+giftButton.addEventListener("click", () => {
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    modalContent.style.cssText = `
+        background-color: #6f057a;
+        box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 32px;
+        width: 350px;
+        height: 300px;
+        position: relative; 
+    `;
+
+    const message = document.createElement('p');
+    message.textContent = `Gift ${blookName.textContent}`;
+    modalContent.appendChild(message);
+
+    const recipientInput = document.createElement('input');
+    recipientInput.type = 'text';
+    recipientInput.placeholder = 'Enter Username';
+    modalContent.appendChild(recipientInput);
+    recipientInput.style.cssText = ` 
+      width: 60%;
+      height: 50px;
+      margin-bottom: 10px;
+      display: inline;
+      font-family: 'pixelify sans';
+      font-size: 22px;
+      text-align: center;
+      border: 3px solid #5e046e;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background-color: transparent;
+      color: white;
+      margin-right: 5px;
+      appearance: textfield;
+      -webkit-appearance: none;
+    `;
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.position = 'absolute'; 
+    buttonContainer.style.bottom = '20px'; 
+    buttonContainer.style.left = '50%'; 
+    buttonContainer.style.transform = 'translateX(-50%)'; 
+    buttonContainer.style.gap = '10px';
+
+    const giftButtonModal = document.createElement('button');
+    giftButtonModal.textContent = 'Gift';
+    giftButtonModal.style.cssText = `
+        background-color: green;
+        box-shadow: inset 0 -0.365vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6);
+        font-family: 'pixelify sans';
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: box-shadow 0.3s ease;
+    `;
+
+  giftButtonModal.onclick = async () => {
+      const recipient = recipientInput.value;
+
+      if (recipient === blookName.textContent) {
+          errorMessage.style.color = 'red';
+          errorMessage.textContent = "You cannot gift blooks to yourself.";
+          return; 
+      }
+
+      giftButtonModal.disabled = true;
+
+      try {
+          const response = await fetchJSON("/giftBlook", {
+              method: "POST",
+              body: JSON.stringify({ recipient, name: blookName.textContent, rarity: blookRarity.textContent })
+          });
+
+          if (response.success) {
+              const owned = parseInt(blookOwned.textContent.split(' ')[0], 10);
+              const newOwned = owned - 1; 
+
+              blookOwned.textContent = `${newOwned} Owned`; 
+
+              sellButton.style.display = newOwned <= 0 ? "none" : "block";
+
+              const itemDivs = document.querySelectorAll(".item");
+              itemDivs.forEach(itemDiv => {
+                  if (itemDiv.querySelector("img")?.alt === blookName.textContent) {
+                      const badge = itemDiv.querySelector(".badge");
+                      if (badge) {
+                          badge.textContent = newOwned; 
+                      }
+                      if (newOwned === 0) {
+                          itemDiv.innerHTML = ""; 
+                          const lockIcon = document.createElement("i");
+                          lockIcon.classList.add("fa-solid", "fa-lock", "fa-2xl");
+                          lockIcon.style.textShadow = "2px 2px 4px #000000";
+                          itemDiv.appendChild(lockIcon);
+                      }
+                  }
+              });
+
+              errorMessage.style.color = 'white';
+              errorMessage.style.fontSize = '24px';
+              errorMessage.textContent = `Successfully gifted ${blookName.textContent} to ${recipient}`; 
+          } else {
+              errorMessage.style.color = 'red';
+              errorMessage.textContent = response.message; 
+          }
+      } catch (error) {
+          errorMessage.style.color = 'red';
+          errorMessage.textContent = error.message; 
+      } finally {
+          giftButtonModal.disabled = false;
+      }
+  };
+
+    const errorMessage = document.createElement('div');
+    errorMessage.id = 'error-message';
+    errorMessage.style.color = 'red';
+    errorMessage.style.marginBottom = '10px';
+    modalContent.appendChild(errorMessage);
+
+    const cancelButtonModal = document.createElement('button');
+    cancelButtonModal.textContent = 'Cancel';
+    cancelButtonModal.style.cssText = `
+        background-color: red;
+        box-shadow: inset 0 -0.365vw #b30000, 3px 3px 15px rgba(0, 0, 0, 0.6);
+        font-family: 'pixelify sans';
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: box-shadow 0.3s ease;
+    `;
+
+    cancelButtonModal.onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    buttonContainer.appendChild(giftButtonModal);
+    buttonContainer.appendChild(cancelButtonModal);
+    modalContent.appendChild(buttonContainer);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+});

@@ -1055,6 +1055,68 @@ router.post("/add-badge", async (req, res) => {
     }
 });
 
+router.post('/checkUser', async (req, res) => {
+  const { username } = req.body;
+  const user = await users.findOne({ username });
+
+  if (user) {
+    return res.json({ exists: true });
+  } else {
+    return res.json({ exists: false });
+  }
+});
+
+router.post("/giftBlook", async (req, res) => {
+  const { recipient, name, rarity } = req.body; 
+
+  if (!req.session || !req.session.loggedIn) {
+    return res.status(401).json({ success: false, message: "You must be logged in to gift a blook." });
+  }
+
+  if (req.session.username === recipient) {
+    return res.status(400).json({ success: false, message: "You cannot gift blooks to yourself." }); 
+  }
+
+  try {
+    const senderUser = await users.findOne({ username: req.session.username });
+    const recipientUser = await users.findOne({ username: recipient });
+
+    if (!recipientUser) {
+      return res.status(404).json({ success: false, message: "This user does not exist." });
+    }
+
+    const blook = senderUser.packs.flatMap(pack => pack.blooks).find(b => b.name === name);
+
+    if (!blook || blook.owned < 1) {
+      return res.status(400).json({ success: false, message: "You don't own this blook." });
+    }
+
+    blook.owned -= 1;
+
+    await users.updateOne({ username: req.session.username }, { $set: { packs: senderUser.packs } });
+
+    const recipientBlookPack = recipientUser.packs.find(pack => pack.name === senderUser.packs[0].name);
+
+    if (recipientBlookPack) {
+      const recipientBlook = recipientBlookPack.blooks.find(b => b.name === name);
+      if (recipientBlook) {
+        recipientBlook.owned += 1; 
+      } else {
+        recipientBlookPack.blooks.push({ name, rarity, owned: 1 });
+      }
+    } else {
+      recipientUser.packs.push({ name: senderUser.packs[0].name, blooks: [{ name, rarity, owned: 1 }] }); 
+    }
+
+    await users.updateOne({ username: recipient }, { $set: { packs: recipientUser.packs } });
+
+    res.json({ success: true, message: `Successfully gifted ${name} to ${recipient}.` });
+  } catch (error) {
+    console.error("Error gifting blook:", error);
+    res.status(500).json({ success: false, message: "An error occurred while gifting the blook." });
+  }
+});
+
 module.exports = router;
 
 router.use((req, res, next) => {

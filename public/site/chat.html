@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="utf-8">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,6 +16,8 @@
       href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script src="/javascript/chat.js" defer></script>
     <link rel="icon" type="image/png" href="https://izumiihd.github.io/pixelitcdn/assets/img/favicon.ico" />
     <link rel="stylesheet" href="../css/chat.css" />
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -34,7 +37,7 @@
             <a href="/leaderboard.html"><i class="fa-solid fa-trophy"></i></a>
             <a href="/market.html"><i class="fa-solid fa-store"></i></a>
             <a href="/pixels.html"><i class="fa-solid fa-suitcase"></i></a>
-            <a href="/gifts.html"><i class="fa-solid fa-gift"></i></a>
+            <a href="/notifications.html"><i class="fa-solid fa-bell"></i></a>
             <a
               id="wrench-icon"
               href="../panel/enc/enc.html"
@@ -86,7 +89,6 @@
         />
       </div>
     </div>
-    <script src="/javascript/chat.js" defer></script>
     <script src="/auth/console.js"></script>
     <script src="/auth/banned.js"></script>
     <script src="/auth/auth.js"></script>
