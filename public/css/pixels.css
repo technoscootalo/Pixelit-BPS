@@ -311,6 +311,10 @@ body {
   margin-left: 10px;
 }
 
+.giftButton:hover {
+  box-shadow: inset 0 -0.5vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+}
+
 .button-group {
   display: flex;
   justify-content: space-around;

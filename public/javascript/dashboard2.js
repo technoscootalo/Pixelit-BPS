@@ -96,6 +96,7 @@ async function addSpinClickListener() {
     }
 
     spinButton.addEventListener('click', async () => {
+        spinButton.disabled = true; 
         try {
             const spinResponse = await fetch('/spin', {
                 method: 'POST',
@@ -118,6 +119,10 @@ async function addSpinClickListener() {
         } catch (error) {
             console.error('Error', error);
             showModal('An error occurred while spinning.');
+        } finally {
+            setTimeout(() => {
+                spinButton.disabled = false;
+            }, eightHours); 
         }
     });
 }

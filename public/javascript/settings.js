@@ -18,14 +18,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 if (localStorage.loggedin == "true") {
     sessionStorage = localStorage;
 }
+
 document.addEventListener('DOMContentLoaded', function () {
     const instantOpenElement = document.getElementById("instantOpen");
-    const instantOpen = sessionStorage.getItem('instantOpen') === 'true';
-    instantOpenElement.textContent = `Instant Open: ${instantOpen ? 'true' : 'false'}`;
+    let instantOpen = localStorage.getItem('instantOpen') === 'On';
+    instantOpenElement.textContent = `Instant Open: ${instantOpen ? 'On' : 'Off'}`;
     instantOpenElement.addEventListener('click', function () {
-        const newStatus = !instantOpen;
-        sessionStorage.setItem('instantOpen', newStatus);
-        instantOpenElement.textContent = `Instant Open: ${newStatus ? 'true' : 'false'}`;
+        instantOpen = !instantOpen;
+        localStorage.setItem('instantOpen', instantOpen ? 'On' : 'Off');
+        instantOpenElement.textContent = `Instant Open: ${instantOpen ? 'On' : 'Off'}`;
     });
 });
 
@@ -56,18 +57,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (usernameElement) {
       usernameElement.textContent = `Username: ${userData.username}`;
     }
-    if (roleElement) {
-      roleElement.textContent = `Role: ${userData.role}`;
-    }
     if (uidElement) {
       uidElement.textContent = `UID: ${userData.uid}`;
     }
   } else {
     if (usernameElement) {
       usernameElement.textContent = `Username: Unavailable`;
-    }
-    if (roleElement) {
-      roleElement.textContent = `Role: Unavailable`;
     }
     if (uidElement) {
       uidElement.textContent = `UID: Unavailable`;

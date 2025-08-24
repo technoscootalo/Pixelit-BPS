@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const socket = io();
     console.info("Chat service initialized and connection established.");
     const sendInput = ge("send"); 
-    const filteredWords = ["nigger", "nigga", "chink", "tranny", "faggot"];
+    const filteredWords = ["nigger", "nigga", "chink", "tranny", "faggot", "nga"];
     let lastMessageTime = 0; 
 
     sendInput.addEventListener("keydown", (e) => {

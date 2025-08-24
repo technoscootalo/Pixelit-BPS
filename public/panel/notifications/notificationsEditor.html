@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="https://izumiihd.github.io/pixelitcdn/assets/img/favicon.ico" />
     <link href="../enc/enc.css" rel="stylesheet" />
-    <link rel="stylesheet" href="owner.css">
+    <link rel="stylesheet" href="notifications.css">
   </head>
   <body>
     <body style="background-color: #6d0180;">
@@ -42,55 +42,23 @@
         </div>
         <div class="title_p" id="title_p">Pixelit</div>
       </div>
-    <center>
-      <h1 class="welcome-title">Developer Panel</h1>
-
+      <center>
       <br>
-
-      <p>Welcome to the developer panel. 
       <br>
-      Here you can find the necessary tools to customize the game and enhance user experiences.</p>
-
-      <br>
-
-      <h1>Game Configuration</h1>
-      <button
-        class="button"
-        onclick="window.location.href='../badge/badgeeditor.html'"
-      >
-        <i class="fa-solid fa-medal"></i> Badge Editor
-      </button>
-      
-      <br>
-
-      <button
-        class="button"
-        onclick="window.location.href='../packEditorPage/packeditor.html'"
-      >
-        <i class="fa-solid fa-store"></i> Pack Editor
-      </button>
-
-      <br>
-
-      <button
-        class="button"
-        onclick="window.location.href='../news/newsedit.html'"
-      >
-        <i class="fa-solid fa-newspaper"></i> News Editor
-      </button>
-
-      <br>
-
-      <button
-        class="button"
-        onclick="window.location.href='../notifications/notificationsEditor.html'"
-      >
-        <i class="fa-solid fa-bell"></i> Notifications Editor
-      </button>
-      
+      <div class="notifications-container">
+        <h1>Notifications Editor</h1>
+        <div class="notification-input">
+          <input type="text" id="notification-input" placeholder="Notification message" style="font-family: Pixelify Sans;"/>
+          <br>
+          <button onclick="sendNotification()">Send Notification</button>
+        </div>
+        <div id="notification-list"></div>
+      </div>
+      </center>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="../../auth/verifyenc.js"></script>
     <script src="/auth/verifyOwner.js"></script>
+    <script src="notifications.js"></script>
     <script src="/auth/console.js"></script>
     <script src="/auth/banned.js"></script>
     <script src="/auth/auth.js"></script>

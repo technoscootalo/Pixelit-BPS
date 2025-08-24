@@ -98,25 +98,26 @@ router.get("/user", async (req, res) => {
       const collection = db.collection("users");
       const user = await collection.findOne({ username: session.username });
       if (user) {
-          res.status(200).send({
-              username: user.username,
-              uid: user._id,
-              tokens: user.tokens,
-              packs: user.packs,
-              role: user.role,
-              pfp: user.pfp,
-              banner: user.banner,
-              badges: user.badges,
-              claimed: user.claimed,
-              muted: user.muted,
-              muteReason: user.muteReason || "",
-              banned: user.banned,
-              banReason: user.banReason || "",
-              stats: { sent: user.sent, packsOpened: user.packsOpened },
-              muteDuration: user.muteDuration,
-              banDuration: user.banDuration,
-          });
-      }
+        res.status(200).send({
+            username: user.username,
+            uid: user._id,
+            tokens: user.tokens,
+            packs: user.packs,
+            role: user.role,
+            pfp: user.pfp,
+            banner: user.banner,
+            badges: user.badges,
+            claimed: user.claimed,
+            muted: user.muted,
+            muteReason: user.muteReason || "",
+            banned: user.banned,
+            banReason: user.banReason || "",
+              tats: { sent: user.sent, packsOpened: user.packsOpened },
+            muteDuration: user.muteDuration,
+            banDuration: user.banDuration,
+            notifications: user.notifications,
+        });
+    }
   } else {
       res.status(401).send("You are not logged in");
   }
@@ -252,7 +253,6 @@ router.post("/addAccount", async (req, res) => {
       if (request !== null) {
         if (req.body.accepted == true) {
           await userRequests.deleteOne({ username: req.body.username });
-            
           await users.insertOne({
             username: req.body.username,
             password: request.password,
@@ -271,7 +271,8 @@ router.post("/addAccount", async (req, res) => {
             badges: [],
             banDuration: 0,
             muteDuration: 0,
-          });
+            notifications: [],
+         });
         }
         try {
           io.emit("getAccounts", "get");
@@ -1095,26 +1096,47 @@ router.post("/giftBlook", async (req, res) => {
 
     await users.updateOne({ username: req.session.username }, { $set: { packs: senderUser.packs } });
 
-    const recipientBlookPack = recipientUser.packs.find(pack => pack.name === senderUser.packs[0].name);
-
-    if (recipientBlookPack) {
-      const recipientBlook = recipientBlookPack.blooks.find(b => b.name === name);
-      if (recipientBlook) {
-        recipientBlook.owned += 1; 
-      } else {
-        recipientBlookPack.blooks.push({ name, rarity, owned: 1 });
-      }
-    } else {
-      recipientUser.packs.push({ name: senderUser.packs[0].name, blooks: [{ name, rarity, owned: 1 }] }); 
-    }
-
-    await users.updateOne({ username: recipient }, { $set: { packs: recipientUser.packs } });
+    const notificationMessage = `${req.session.username} has gifted you ${name} on ${new Date().toLocaleDateString()}`;
+    recipientUser.notifications.push({ message: notificationMessage, date: new Date() });
+    await users.updateOne({ username: recipient }, { $set: { notifications: recipientUser.notifications } });
 
     res.json({ success: true, message: `Successfully gifted ${name} to ${recipient}.` });
   } catch (error) {
     console.error("Error gifting blook:", error);
     res.status(500).json({ success: false, message: "An error occurred while gifting the blook." });
   }
+});
+
+app.use(bodyParser.json());
+
+app.post('/sendNotification', async (req, res) => {
+    if (!req.session || !req.session.loggedIn) {
+      return res.status(401).json({ success: false, message: "You must be logged in to send notifications." });
+    }
+  
+    const { message } = req.body;
+    if (!message) {
+        return res.status(400).json({ success: false, message: "Notification message is required." });
+    }
+    try {
+        const allUsers = await users.find().toArray();
+        for (const user of allUsers) {
+            user.notifications.push({ message, date: new Date() });
+            await users.updateOne({ username: user.username }, { $set: { notifications: user.notifications } });
+        }
+        return res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+router.get("/getNotifications", async (req, res) => {
+  if (!req.session || !req.session.loggedIn) {
+    return res.status(401).json({ success: false, message: "You must be logged in to view notifications." });
+  }
+
+  const user = await users.findOne({ username: req.session.username });
+  res.json({ success: true, notifications: user.notifications || [] });
 });
 
 module.exports = router;

@@ -119,7 +119,7 @@ function createPackElement(pack) {
 let lastPackClickTime = 0;
 async function openPack(packName, packCost) {
   const currentTime = Date.now();
-  const instantOpen = sessionStorage.getItem('instantOpen') === 'true';
+  const instantOpen = localStorage.getItem('instantOpen') === 'On';
   const delay = instantOpen ? 1000 : 4000; 
 
   if (currentTime - lastPackClickTime < delay) { 

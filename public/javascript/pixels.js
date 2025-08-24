@@ -618,6 +618,14 @@ giftButton.addEventListener("click", () => {
         transition: box-shadow 0.3s ease;
     `;
 
+    giftButtonModal.onmouseover = () => {
+      giftButtonModal.style.boxShadow = 'inset 0 -0.5vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+
+    giftButtonModal.onmouseout = () => {
+      giftButtonModal.style.boxShadow = 'inset 0 -0.365vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+
   giftButtonModal.onclick = async () => {
       const recipient = recipientInput.value;
 
@@ -694,6 +702,14 @@ giftButton.addEventListener("click", () => {
         cursor: pointer;
         transition: box-shadow 0.3s ease;
     `;
+
+    cancelButtonModal.onmouseover = () => {
+      cancelButtonModal.style.boxShadow = 'inset 0 -0.5vw #b30000, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
+
+    cancelButtonModal.onmouseout = () => {
+      cancelButtonModal.style.boxShadow = 'inset 0 -0.3655vw #b30000, 3px 3px 15px rgba(0, 0, 0, 0.6)';
+    };
 
     cancelButtonModal.onclick = () => {
         document.body.removeChild(modal);
