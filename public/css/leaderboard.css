@@ -133,6 +133,7 @@ body {
   border-radius: 5px;
   display: flex;
   align-items: center;
+  text-align: center;
   width: 120px; 
   font-size: 24px;
   background: radial-gradient(circle, #61056b, #6f057a);

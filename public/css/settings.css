@@ -145,6 +145,16 @@ body {
   }
 }
 
+.password-change-modal-conten {
+  display: block;
+}
+
+@media screen and (max-width: 600px) {
+  .password-change-modal-conten {
+    width: 360px;
+  }
+}
+
 .changeUser {
   text-decoration: underline white;
   text-decoration-thickness: 2px;

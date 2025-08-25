@@ -84,9 +84,11 @@ async function handleBackButtonClick() {
 
   if (backButton.innerText === 'Tokens') {
       backButton.innerText = 'Messages';
+      backButton.style.textAlign = 'center';
       await fetchTopSenders();
   } else {
       backButton.innerText = 'Tokens';
+      backButton.style.textAlign = 'center';
       await fetchLeaderboardData();
   }
 

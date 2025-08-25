@@ -9,7 +9,9 @@ socket.on("auditLogs", (logs) => {
     logsContainer.innerHTML = '';
 
     if (logs.length) {
-        logs.forEach(log => {
+        const sortedLogs = logs.reverse(); 
+
+        sortedLogs.forEach(log => {
             const logDiv = document.createElement('div');
 
             logDiv.style.background = "#5e046e";
@@ -33,7 +35,7 @@ socket.on("auditLogs", (logs) => {
             logsContainer.appendChild(logDiv); 
         });
     } else {
-        logsContainer.innerHTML = "<p>No logs available.</p>"; 
+        logsContainer.innerHTML = "<p>No logs found.</p>"; 
     }
 });
 

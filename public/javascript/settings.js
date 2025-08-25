@@ -92,6 +92,7 @@ function createPasswordChangeModal() {
         z-index: 1000;
     `;
     const modalContent = document.createElement('div');
+    modalContent.className = 'password-change-modal-content';
     modalContent.style.cssText = `
         background-color: #6f057a;
         box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
@@ -100,7 +101,7 @@ function createPasswordChangeModal() {
         text-align: center;
         font-size: 26px;
         width: 420px;
-    `;
+    `
     const title = document.createElement('h2');
     title.textContent = "Change Password";
     modalContent.appendChild(title);
