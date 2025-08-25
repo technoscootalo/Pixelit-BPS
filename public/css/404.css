@@ -35,6 +35,13 @@ body {
   transform: translateY(-50%);
 }
 
+@media screen and (max-width: 600px) {
+  .container-404 {
+    width: 300px;
+    height: 300px;
+  }
+}
+
 .center-container {
   display: flex;
   justify-content: center;
@@ -49,16 +56,42 @@ body {
   border-radius: 8px;
 }
 
+@media screen and (max-width: 600px) {
+  .center-content {
+    max-width: 200px;
+    padding: 10px;
+    border-radius: 8px
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
 .title {
   font-size: 245px;
   margin: 0px;
   color: #ffffff;
 }
 
+@media screen and (max-width: 600px) {
+  .title {
+    font-size: 75px;
+    margin: 0px;
+    color: #ffffff;
+  }
+}
+
 .description {
   font-size: 1.5em;
   margin: 20px 0;
   color: #ffffff;
+}
+
+@media screen and (max-width: 600px) {
+  .description {
+    font-size: 1em;
+    margin: 10px 0;
+    color: #ffffff;
+  }
 }
 
 .home-button {
@@ -80,4 +113,12 @@ body {
   width: 180px;
   height: 180px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .img {
+    width: 60px;
+    height: 60px;
+    cursor: pointer
+  }
 }

@@ -75,7 +75,12 @@ body {
 
 @media screen and (max-width: 600px) {
   .title_p {
-    display: none;
+    margin-left: 80%;
+    position: absolute;
+    top: 0.7%;
+    font-size: 18px;
+    color: #fff;
+    text-shadow: #000 1px 0 13px;
   }
 }
 
