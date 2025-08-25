@@ -27,24 +27,6 @@ body {
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
 }
 
-@media screen and (max-width: 600px) {
-  .navbar {
-    border-radius: 0;
-    box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
-    width: 100%;
-  }
-  .navbar a, .dropdown .dropbtn {
-    float: none;
-    display: block;
-    padding: 10px;
-  }
-  .dropdown-content {
-    position: relative;
-    box-shadow: none;
-    border-radius: 0;
-  }
-}
-
 .navbar a {
   float: left;
   font-size: 16px;
@@ -54,6 +36,25 @@ body {
   text-decoration: none;
   text-shadow: #000 1px 0 13px;
   transition: transform 0.3s ease-in-out;
+}
+
+@media screen and (max-width: 600px) {
+  .navbar {
+    border-radius: 0;
+    box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+    width: 100%;
+  }
+  .navbar a, .dropdown .dropbtn {
+    float: left;
+    display: block;
+    padding: 10px;
+    font-size: 14px;
+  }
+  .dropdown-content {
+    position: relative;
+    box-shadow: none;
+    border-radius: 0;
+  }
 }
 
 .title_p {
@@ -87,7 +88,12 @@ body {
 @media screen and (max-width: 600px) {
   .container {
     width: 83%;
+    position: fixed;
+    bottom: 5%;
     left: 5%;
+    top: auto;
+    height: 300px; 
+    overflow-y: auto;
   }
 }
 
@@ -95,8 +101,20 @@ body {
   margin-bottom: 20px;
 }
 
+@media screen and (max-width: 600px) {
+  .pack {
+    margin-bottom: 10px;
+  }
+}
+
 .pack h2 {
   margin-bottom: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .pack h2 {
+    margin-bottom: 5px;
+  }
 }
 
 .items {
@@ -138,6 +156,13 @@ body {
   border-radius: 5px;
 }
 
+@media screen and (max-width: 600px) {
+  .item img {
+    max-width: 70%;
+    max-height: 70%;
+  }
+}
+
 .blook-details {
   position: absolute;
   top: 25%;
@@ -153,7 +178,10 @@ body {
 
 @media screen and (max-width: 600px) {
   .blook-details {
-    display: none;
+    width: 350px;
+    height: 350px;
+    top: 7%;
+    right: 5%;
   }
 }
 
@@ -167,10 +195,23 @@ body {
     1px 1px 0 black;
 }
 
+@media screen and (max-width: 600px) {
+  .name {
+    font-size: 24px;
+  }
+}
+
 .blook-details img {
   width: 160px !important;
   height: 160px !important;
   border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  .blook-details img {
+    width: 120px !important;
+    height: 120px !important;
+  }
 }
 
 .blook-details h2 {
@@ -180,6 +221,13 @@ body {
     1px -1px 0 black,
     -1px 1px 0 black,
     1px 1px 0 black;
+}
+
+@media screen and (max-width: 600px) {
+  .blook-details h2 {
+    font-size: 24px;
+    margin-top: -5px
+  }
 }
 
 .blook-details p {
@@ -313,6 +361,18 @@ body {
 
 .giftButton:hover {
   box-shadow: inset 0 -0.5vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (max-width: 600px) {
+  .giftButton {
+    width: 390px;
+    position: fixed;
+    left: 47.5%;
+    transform: translateX(-50%);
+    top: 474px;
+    bottom: auto;
+    right: auto;
+  }
 }
 
 .button-group {
