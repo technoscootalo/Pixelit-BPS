@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       data.notifications.forEach(notification => {
         const notificationElement = document.createElement("div");
         notificationElement.classList.add("notifications");
-        notificationElement.textContent = notification.message + " " + new Date(notification.date).toLocaleTimeString();
+        notificationElement.textContent = notification.message + " at " + new Date(notification.date).toLocaleTimeString();
         notificationsDiv.prepend(notificationElement); 
       });
     } else {

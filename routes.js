@@ -98,26 +98,26 @@ router.get("/user", async (req, res) => {
       const collection = db.collection("users");
       const user = await collection.findOne({ username: session.username });
       if (user) {
-        res.status(200).send({
-            username: user.username,
-            uid: user._id,
-            tokens: user.tokens,
-            packs: user.packs,
-            role: user.role,
-            pfp: user.pfp,
-            banner: user.banner,
-            badges: user.badges,
-            claimed: user.claimed,
-            muted: user.muted,
-            muteReason: user.muteReason || "",
-            banned: user.banned,
-            banReason: user.banReason || "",
-              tats: { sent: user.sent, packsOpened: user.packsOpened },
-            muteDuration: user.muteDuration,
-            banDuration: user.banDuration,
-            notifications: user.notifications,
-        });
-    }
+          res.status(200).send({
+              username: user.username,
+              uid: user._id,
+              tokens: user.tokens,
+              packs: user.packs,
+              role: user.role,
+              pfp: user.pfp,
+              banner: user.banner,
+              badges: user.badges,
+              claimed: user.claimed,
+              muted: user.muted,
+              muteReason: user.muteReason || "",
+              banned: user.banned,
+              banReason: user.banReason || "",
+              stats: { sent: user.sent, packsOpened: user.packsOpened },
+              muteDuration: user.muteDuration,
+              banDuration: user.banDuration,
+              notifications: user.notifications,
+          });
+      }
   } else {
       res.status(401).send("You are not logged in");
   }
@@ -982,27 +982,25 @@ router.post("/changeUsername", async (req, res) => {
 
 router.post("/changePassword", async (req, res) => {
     const session = req.session;
-
-    if (!session.loggedIn) {
-        return res.status(401).send("You must be logged in to change your password.");
-    }
-
     const { currentPassword, newPassword } = req.body;
-    const db = client.db(db_name);
-    const user = await db.collection("users").findOne({ username: session.username });
-
-    if (!user) {
-        return res.status(404).send("User not found.");
+    if (!session || !session.loggedIn) {
+        return res.status(401).json({ message: "You must be logged in to change your password." });
     }
-
-    const isPasswordValid = await validatePassword(currentPassword, user.password);
-    if (!isPasswordValid) {
-        return res.status(401).send("Current password is incorrect.");
+    try {
+        const user = await users.findOne({ username: session.username });
+        if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
+            return res.status(401).json({ message: "Invalid current password." });
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await users.updateOne(
+            { username: session.username },
+            { $set: { password: hashedPassword } }
+        );
+        res.status(200).json({ message: "Password changed successfully." });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ message: "Internal server error." });
     }
-
-    const hashedPassword = await hashPassword(newPassword);
-    await db.collection("users").updateOne({ username: session.username }, { $set: { password: hashedPassword } });
-    res.status(200).send("Password changed successfully."); 
 });
 
 router.get("/allUsers", async (req, res) => {

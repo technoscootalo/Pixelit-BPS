@@ -1,3 +1,5 @@
+import emojiMap from './emojiMap.js';
+
 function escapeHTML(str) {
     const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
@@ -5,10 +7,7 @@ function escapeHTML(str) {
 }
 
 function parseMessage(str) {
-    const emojiMap = {
-        ':sob:': '😭',
-        ':skull:': '💀',
-    };
+
     Object.keys(emojiMap).forEach(shortcode => {
         const regex = new RegExp(shortcode, 'g');
         str = str.replace(regex, emojiMap[shortcode]);

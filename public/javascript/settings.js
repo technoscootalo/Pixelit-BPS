@@ -70,10 +70,10 @@ document.addEventListener("DOMContentLoaded", async function() {
   }
 });
 
-/*document.getElementById('changePassword').addEventListener('click', function() {
+document.getElementById('changePassword').addEventListener('click', function() {
     const modal = createPasswordChangeModal();
     document.body.appendChild(modal);
-}); */
+});
 
 function createPasswordChangeModal() {
     const modal = document.createElement('div');
@@ -226,7 +226,6 @@ function createPasswordChangeModal() {
         }
 
         const forbiddenChars = /[^a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
-
         if (forbiddenChars.test(newPassword) || newPassword.length < 8 || newPassword.length > 32) {
             warningText.textContent = "New password must be 8-32 characters long and contain only letters, numbers, and common symbols.";
             setTimeout(() => {
@@ -234,7 +233,7 @@ function createPasswordChangeModal() {
             }, 2000);
             return;
         }
-        
+
         const response = await fetch('/changePassword', {
             method: 'POST',
             headers: {
@@ -249,13 +248,13 @@ function createPasswordChangeModal() {
             const errorText = await response.text();
             document.getElementById('error-message').textContent = `Error: ${errorText}`; 
         }
-        };
+    };
 
-        modal.addEventListener('click', function(event) {
+    modal.addEventListener('click', function(event) {
         if (event.target === modal) {
             document.body.removeChild(modal);
         }
-        });
+    });
     
     modalContent.appendChild(changeButton);
     modal.appendChild(modalContent);

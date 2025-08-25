@@ -138,17 +138,18 @@ body {
   }
 }
 
-
 .changeUser {
   text-decoration: underline white;
   text-decoration-thickness: 2px;
   cursor: pointer;
 }
+
 .changePass {
   text-decoration: underline white;
   text-decoration-thickness: 2px;
   cursor: pointer;
 }
+
 .instantOpen {
   text-decoration: underline white;
   text-decoration-thickness: 2px;
