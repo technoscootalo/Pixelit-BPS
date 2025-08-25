@@ -3,7 +3,6 @@ body {
   color: white;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 .bg_img {
   position: fixed;
@@ -25,6 +24,7 @@ body {
   border-bottom-right-radius: 0;
   box-shadow: inset 0 -0.365vw #61056b, 3px 3px 15px rgba(0, 0, 0, 0.6)
 }
+
 @media screen and (max-width: 600px) {
   .navbar {
     border-radius: 0;
@@ -42,6 +42,7 @@ body {
     border-radius: 0;
   }
 }
+
 .navbar a {
   float: left;
   font-size: 16px;
