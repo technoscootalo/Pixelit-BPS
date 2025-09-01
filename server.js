@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config();
 const CryptoJS = require("crypto-js");
 const stringifySafe = require("json-stringify-safe");
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -76,7 +77,7 @@ function rand(min, max) {
   return Math.random() * (max - min + 1) + min;
 }
 
-const uri = process.env["mongoURL"];
+const uri = process.env.mongoURL;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -111,18 +112,20 @@ const localTime = new Date(Date.now() - timezoneOffset * 60 * 1000);
 const router = require("./routes.js");
 app.use(router);
 
+const hostname = 'localhost';
 const port = 3000;
+
 const encpass = process.env["encpass"];
 
-io.on("connection", (socket) => {
-  console.log("A user connected");
 
-  socket.on("getChat", async () => {
-    const messages = await chatm.find().toArray();
+/* 
+io.on("connection", (socket) => {
+console.log("A user connected");
+    const messages = chatm.find().toArray();
     socket.emit("chatupdate", messages);
   });
-  
-  socket.on("message", async (message) => {
+
+    socket.on("message", async (message) => {
     const username = message.sender;
     const timestamp = message.timestamp;
     const user = await users.findOne({ username: username });
@@ -241,16 +244,15 @@ io.on("connection", (socket) => {
       socket.emit("error", "Error posting news.");
     }
   });
-
   
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
-});
+}
+*/
 
-server.listen(port, '0.0.0.0', () => {
-  console.log(`Server started successfully on port ${port}`);
-  console.log(`Server is running at ${process.env["DEV_LINK"]}:${port}`);
+server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
 
 console.log("Initializing server...");

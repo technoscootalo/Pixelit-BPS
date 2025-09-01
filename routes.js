@@ -1,15 +1,14 @@
 const path = require('path');
+require('dotenv').config();
 const express = require("express");
 const router = express.Router();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const { ObjectId } = require("mongodb");
-const uri = process.env["mongoURL"];
-const db_name = "pixelit";
-const CryptoJS = require("crypto-js");
+const uri = process.env.mongoURL;
 const crypto = require("crypto");
 const rateLimit = require("express-rate-limit");
-const Stripe = require("stripe");
 const bodyParser = require("body-parser");
+const Stripe = require("stripe");
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const bcrypt = require('bcrypt');
 
@@ -75,6 +74,7 @@ async function run() {
 }
 run().catch(console.dir);
 
+const db_name = "pixelit";
 const db = client.db(db_name);
 const newsCollection = db.collection("news");
 const users = db.collection("users");
@@ -1136,6 +1136,59 @@ router.get("/getNotifications", async (req, res) => {
   const user = await users.findOne({ username: req.session.username });
   res.json({ success: true, notifications: user.notifications || [] });
 });
+
+router.post('/create-checkout-session', async (req, res) => {
+  try {
+      const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [{
+              price_data: {
+                  currency: 'usd',
+                  product_data: {
+                      name: 'Pixelit Plus',
+                      images: ['https://izumiihd.github.io/pixelitcdn/assets/img/badges/Plus.png'],
+                  },
+                  unit_amount: 399
+              },
+              quantity: 1,
+          }],
+          mode: 'payment',
+          success_url: 'https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/login.html', 
+          cancel_url: 'https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/', 
+      });
+      res.json({ id: session.id });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/payment-success', async (req, res) => {
+  const { username } = req.body; 
+  await client.connect();
+  const database = client.db("pixelit");
+  const usersCollection = database.collection("users");
+  const badge = {
+      name: 'Pixelit Plus',
+      image: 'https://izumiihd.github.io/pixelitcdn/assets/img/badges/Plus.png',
+  };
+  try {
+      await usersCollection.updateOne(
+          { username: username },
+          {
+              $set: { role: 'Plus' },  
+              $push: { badges: badge } 
+          }
+      );
+      res.status(200).send("Badge added and role updated");
+  } catch (err) {
+      res.status(500).send("Failed to update user");
+  } finally {
+      await client.close(); 
+  }
+});
+
+module.exports = router;
+
 
 module.exports = router;
 
