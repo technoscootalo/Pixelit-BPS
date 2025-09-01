@@ -450,6 +450,7 @@ function changeProfilePicture(blookName, imageUrl, packName) {
   blookImageEl.style.display = 'block';
   blookImageEl.style.marginLeft = 'auto';
   blookImageEl.style.marginRight = 'auto';
+  blookImageEl.style.filter = 'drop-shadow(0 0 5px rgba(0, 0, 0, 0.5))';
   blookImageEl.onerror = function() {
     console.error("Failed to load image:", this.src);
     this.src = 'https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';

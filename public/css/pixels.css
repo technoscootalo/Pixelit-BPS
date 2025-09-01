@@ -138,6 +138,7 @@ body {
   padding: 3px 6px;
   font-size: 12px;
   font-weight: bold;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
   text-shadow: -1px -1px 0 black,
     1px -1px 0 black,
     -1px 1px 0 black,
@@ -155,6 +156,7 @@ body {
 }
 
 .item img {
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
   max-width: 90%;
   max-height: 90%;
   cursor: pointer;
@@ -207,6 +209,7 @@ body {
 }
 
 .blook-details img {
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
   width: 160px !important;
   height: 160px !important;
   border-radius: 5px;
@@ -333,6 +336,7 @@ body {
   width: 160px;
   height: 160px;
   margin-right: 10px;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
 }
 
 .pixel-details p {

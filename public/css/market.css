@@ -148,6 +148,7 @@ body {
   height: 42px;
   margin-left: 10px;
   transform: rotate(20deg);
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
 }
 
 @media screen and (max-width: 600px) {
@@ -201,7 +202,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 18px;
+  cursor: pointer;
 }
 
 ::-webkit-scrollbar-track {

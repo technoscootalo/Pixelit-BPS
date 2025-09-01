@@ -60,7 +60,7 @@ body {
   .center-content {
     max-width: 200px;
     padding: 10px;
-    border-radius: 8px
+    border-radius: 8px;
     text-align: center;
     margin: 0 auto;
   }

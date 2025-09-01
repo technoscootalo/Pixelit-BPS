@@ -100,10 +100,11 @@ function createPackElement(pack) {
   packImage.alt = pack.name;
   packImage.style.width = '145px';
   packImage.style.height = '145px';
+  packImage.style.filter = 'drop-shadow(0 0 5px rgba(0, 0, 0, 0.5))';
   packImage.style.transform = 'rotate(8deg)';
 
   const packCost = document.createElement('p');
-  packCost.innerHTML = `<img src="https://izumiihd.github.io/pixelitcdn/assets/img/dashboard/token.png" alt="Token" style="width: 20px; height: 20px; vertical-align: middle;"> ${pack.cost}`;
+  packCost.innerHTML = `<img src="https://izumiihd.github.io/pixelitcdn/assets/img/icons/token.png" alt="Token" style="width: 20px; height: 20px; vertical-align: middle; filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));"> ${pack.cost}`;
   packCost.style.margin = '5px 0';
 
   divBox.appendChild(packImage);
@@ -262,6 +263,7 @@ function showPackContents(result) {
   blookImage.style.width = '160px';
   blookImage.style.height = '160px';
   blookImage.style.borderRadius = '5px';
+  blookImage.style.filter = 'drop-shadow(0 0 5px rgba(0, 0, 0, 0.5))';
   blookImage.onerror = function() {
     console.error("Failed to load image:", this.src);
     this.src = 'https://izumiihd.github.io/pixelitcdn/assets/img/blooks/logo.png';
@@ -407,6 +409,7 @@ document.getElementById('displayRarity').addEventListener('click', async functio
       const blookImage = document.createElement('img');
       blookImage.src = blook.imageUrl;
       blookImage.alt = blook.name;
+      blookImage.style.filter = 'drop-shadow(0 0 5px rgba(0, 0, 0, 0.5))';
       blookImage.style.width = '100px';
       blookImage.style.height = '100px';
       blookImage.onerror = function() {

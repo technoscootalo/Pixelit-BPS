@@ -10,6 +10,8 @@ const http = require("http");
 const { Server } = require('socket.io');
 const fs = require("fs");
 const app = express();
+const bcrypt = require("bcrypt");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const server = http.createServer(app);
 const io = new Server(server, { pingInterval: 2000, pingTimeout: 5000 });
 
@@ -31,10 +33,18 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    if (req.path.endsWith('.html')) {
-        req.url = req.path.replace(/.html$/, '');
+  if (req.method === 'GET' && !path.extname(req.path)) {
+
+    const siteHtml = path.join(__dirname, 'public', 'site', req.path + '.html');
+
+    const publicHtml = path.join(__dirname, 'public', req.path + '.html');
+    if (fs.existsSync(siteHtml)) {
+      return res.sendFile(siteHtml);
+    } else if (fs.existsSync(publicHtml)) {
+      return res.sendFile(publicHtml);
     }
-    next();
+  }
+  next();
 });
 
 app.use((req, res, next) => {
@@ -105,11 +115,13 @@ async function run() {
     console.log(e);
   }
 }
+
 run().catch(console.dir);
 
 const timezoneOffset = new Date().getTimezoneOffset();
 const localTime = new Date(Date.now() - timezoneOffset * 60 * 1000);
 const router = require("./routes.js");
+app.use('/storeWebhook', express.raw({ type: 'application/json' }));
 app.use(router);
 
 const hostname = 'localhost';
@@ -117,19 +129,16 @@ const port = 3000;
 
 const encpass = process.env["encpass"];
 
+io.on("connection", async (socket) => {
+  console.log("A user connected");
+  const messages = await chatm.find().toArray();
+  socket.emit("chatupdate", messages);
 
-/* 
-io.on("connection", (socket) => {
-console.log("A user connected");
-    const messages = chatm.find().toArray();
-    socket.emit("chatupdate", messages);
-  });
-
-    socket.on("message", async (message) => {
+  socket.on("message", async (message) => {
     const username = message.sender;
     const timestamp = message.timestamp;
     const user = await users.findOne({ username: username });
-    if (user.muted) {
+    if (user && user.muted) {
       return socket.emit("error", "User is muted.");
     }
     console.log("sending message");
@@ -138,118 +147,86 @@ console.log("A user connected");
         console.log("message too long");
         return;
       }
-      
+
       const chatMessage = {
         sender: username,
         msg: message.msg,
-        badges: user.badges,
-        pfp: user.pfp,
+        badges: user ? user.badges : [],
+        pfp: user ? user.pfp : "",
         timestamp: timestamp 
       };
 
-        
-          const cookief = socket.handshake.headers.cookie;
-          console.log("getting response");
+      const cookief = socket.handshake.headers.cookie;
+      console.log("getting response");
 
-          const response = await axios.get(
-              "https://pixelit.club/user",
-              {
-                  headers: {
-                      Cookie: cookief,
-                  },
-                  validateStatus: function (status) {
-                      return (status >= 200 && status < 300) || status === 500; 
-                  },
-                  withCredentials: true,
-              }
-          );
+      const response = await axios.get(
+        "https://going-generators-meets-su.trycloudflare.com/user",
+        {
+          headers: {
+            Cookie: cookief,
+          },
+          validateStatus: function (status) {
+            return (status >= 200 && status < 300) || status === 500; 
+          },
+          withCredentials: true,
+        }
+      );
 
-          console.log(response);
-          if (response.status !== 500) {
-              const username = response.data.username;
-              const user = await users.findOne({ username: username });
+      console.log(response);
+      if (response.status !== 500) {
+        const username = response.data.username;
+        const user = await users.findOne({ username: username });
 
-              if (!user) {
-                  console.log("User not found in database.");
-                  return;
-              }
+        if (!user) {
+          console.log("User not found in database.");
+          return;
+        }
 
-              await chatm.insertOne(chatMessage);
-              const updatedSentCount = user.sent + 1;
-              const updatedTokensCount = user.tokens + 1;
-              await users.updateOne(
-                  { username: username },
-                  { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
-              );
+        await chatm.insertOne(chatMessage);
+        const updatedSentCount = user.sent + 1;
+        const updatedTokensCount = user.tokens + 1;
+        await users.updateOne(
+          { username: username },
+          { $set: { sent: updatedSentCount, tokens: updatedTokensCount } }
+        );
 
-              const messages = await chatm.find().toArray();
-              io.emit("chatupdate", messages);
-              console.log("message sent");
-          } else {
-              socket.emit("error", response.data);
-          }
-      } catch (error) {
-          console.error("Error during message handling:", error);
+        const messages = await chatm.find().toArray();
+        io.emit("chatupdate", messages);
+        console.log("message sent");
+      } else {
+        socket.emit("error", response.data);
       }
+    } catch (error) {
+      console.error("Error during message handling:", error);
+    }
   });
 
   socket.on("logFilteredMessage", async (data) => {
-      const { username, message, timestamp } = data;
-      try {
-          await client.connect();
-          const db = client.db(db_name);
-          const auditCollection = db.collection("audits");
-          const logEntry = {
-              username: username,
-              message: message,
-              timestamp: new Date(timestamp)
-          };
+    const { username, message, timestamp } = data;
+    try {
+      const logEntry = {
+        username: username,
+        message: message,
+        timestamp: new Date(timestamp)
+      };
 
-          const result = await auditCollection.insertOne(logEntry);
-          console.log("Logged filtered message:", logEntry);
-          console.log("Insert Result:", result); 
-      } catch (error) {
-          console.error("Error logging message:", error.message); 
-      } finally {
-          await client.close(); 
-      }
+      const result = await auditCollection.insertOne(logEntry);
+      console.log("Logged filtered message:", logEntry);
+      console.log("Insert Result:", result); 
+    } catch (error) {
+      console.error("Error logging message:", error.message); 
+    }
   });
 
   socket.on("getAuditLogs", async () => {
-      const logs = await auditCollection.find().toArray();
-      socket.emit("auditLogs", logs);
-  });
-  
-  socket.on("getNews", async () => {
-    const newsPosts = await news.find().toArray();
-    socket.emit("getNews", newsPosts);
+    const logs = await auditCollection.find().toArray();
+    socket.emit("auditLogs", logs);
   });
 
-  socket.on("postNews", async (data) => {
-    const { title, content } = data;
-    if (!title || !content) {
-      socket.emit("error", "Title and content are required.");
-      return;
-    }
-    try {
-      const newPost = {
-        title,
-        content,
-        date: new Date().toLocaleString()
-      };
-      const result = await news.insertOne(newPost);
-      socket.emit("newsPosted", result.ops[0]); 
-    } catch (error) {
-      console.error("Error posting news:", error);
-      socket.emit("error", "Error posting news.");
-    }
-  });
-  
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
-}
-*/
+});
 
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);

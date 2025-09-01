@@ -121,10 +121,6 @@ body {
   margin: 10px 0;
 }
 
-.sign-out {
-  color: white;
-  text-decoration: none;
-}
 .edit-info-section {
   width: 25%;
   color: white;
@@ -171,4 +167,14 @@ body {
   text-decoration: underline white;
   text-decoration-thickness: 2px;
   cursor: pointer;
+}
+
+.sign-out {
+  color: white;
+  text-decoration: none;
+}
+
+.visit-store {
+  color: white;
+  text-decoration: none;
 }

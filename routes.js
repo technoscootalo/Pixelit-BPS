@@ -1137,61 +1137,62 @@ router.get("/getNotifications", async (req, res) => {
   res.json({ success: true, notifications: user.notifications || [] });
 });
 
-router.post('/create-checkout-session', async (req, res) => {
-  try {
-      const session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
-          line_items: [{
-              price_data: {
-                  currency: 'usd',
-                  product_data: {
-                      name: 'Pixelit Plus',
-                      images: ['https://izumiihd.github.io/pixelitcdn/assets/img/badges/Plus.png'],
-                  },
-                  unit_amount: 399
-              },
-              quantity: 1,
-          }],
-          mode: 'payment',
-          success_url: 'https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/login.html', 
-          cancel_url: 'https://e7526193-7c97-4f3b-8bb7-0fc58e33ca19-00-114uk91w9bqzr.worf.replit.dev/', 
-      });
-      res.json({ id: session.id });
-  } catch (error) {
-      res.status(500).json({ error: error.message });
+router.post('/storeCheckout', async (req, res) => {
+  if (!req.session || !req.session.username) {
+    return res.status(401).json({ error: 'You must be logged in.' });
   }
-});
-
-router.post('/payment-success', async (req, res) => {
-  const { username } = req.body; 
-  await client.connect();
-  const database = client.db("pixelit");
-  const usersCollection = database.collection("users");
-  const badge = {
-      name: 'Pixelit Plus',
-      image: 'https://izumiihd.github.io/pixelitcdn/assets/img/badges/Plus.png',
-  };
+  const username = req.session.username;
   try {
-      await usersCollection.updateOne(
-          { username: username },
-          {
-              $set: { role: 'Plus' },  
-              $push: { badges: badge } 
-          }
-      );
-      res.status(200).send("Badge added and role updated");
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'cad',
+          product_data: { name: 'Pixelit Plus' },
+          unit_amount: 399,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `${process.env.BASE_URL}/login.html`,
+      cancel_url: `${process.env.BASE_URL}/index.html`,
+      metadata: { username }
+    });
+    res.json({ url: session.url });
   } catch (err) {
-      res.status(500).send("Failed to update user");
-  } finally {
-      await client.close(); 
+    res.status(500).json({ error: 'Stripe error' });
   }
 });
 
-module.exports = router;
+router.post('/storeWebhook', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 
-
-module.exports = router;
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const username = session.metadata.username;
+    const user = await users.findOne({ username });
+    if (user) {
+      const plusBadge = await badges.findOne({ name: "Plus" });
+      await users.updateOne(
+        { username },
+        {
+          $addToSet: { badges: plusBadge._id },
+          $set: { role: "Plus" }
+        }
+      );
+    }
+  }
+  res.json({ received: true });
+});
 
 router.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, 'public', 'site', '404.html'));
 });
+
+module.exports = router;

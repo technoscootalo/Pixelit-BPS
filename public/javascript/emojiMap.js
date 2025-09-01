@@ -1,5 +1,4 @@
 const emojiMap = {
-
     ':grinning:': '😁',
     ':smiley:': '😀',
     ':smile:': '😊',
