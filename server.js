@@ -160,7 +160,7 @@ io.on("connection", async (socket) => {
       console.log("getting response");
 
       const response = await axios.get(
-        "https://going-generators-meets-su.trycloudflare.com/user",
+        "https://izumiihd.xyz/user",
         {
           headers: {
             Cookie: cookief,
