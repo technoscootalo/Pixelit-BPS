@@ -180,3 +180,17 @@ document.addEventListener('DOMContentLoaded', function() {
    console.error('Error fetching user role:', error);
     });
 });
+
+function logout() {
+  fetch('/logout', { method: 'POST' })
+    .then(response => {
+      if (response.ok) {
+        sessionStorage.clear();
+        localStorage.removeItem('loggedIn');
+        window.location.href = '/';
+      } else {
+        console.error('Logout failed');
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}

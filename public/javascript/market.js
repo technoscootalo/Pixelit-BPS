@@ -469,13 +469,14 @@ document.getElementById('displayRarity').addEventListener('click', async functio
 });
 
 document.head.appendChild(style);
+
 function logout() {
   fetch('/logout', { method: 'POST' })
     .then(response => {
       if (response.ok) {
         sessionStorage.clear();
         localStorage.removeItem('loggedIn');
-        window.location.href = '/index.html';
+        window.location.href = '/';
       } else {
         console.error('Logout failed');
       }

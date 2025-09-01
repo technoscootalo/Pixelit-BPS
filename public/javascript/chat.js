@@ -338,7 +338,7 @@ function logout() {
       if (response.ok) {
         sessionStorage.clear();
         localStorage.removeItem('loggedIn');
-        window.location.href = '/index.html';
+        window.location.href = '/';
       } else {
         console.error('Logout failed');
       }
