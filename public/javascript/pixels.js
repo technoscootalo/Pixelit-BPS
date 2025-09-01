@@ -140,12 +140,16 @@ function generatePacksHTML(packsData) {
 
         itemDiv.addEventListener("click", () => updateBlookInfo(blook, pack.name));
       } else {
-        const lockIcon = document.createElement("i");
-        lockIcon.classList.add("fa-solid", "fa-lock", "fa-2xl");
-        lockIcon.style.textShadow = "2px 2px 4px #000000";
-        itemDiv.style.cursor = 'pointer';
-        itemDiv.appendChild(lockIcon);
-      }
+          const lockIcon = document.createElement("img");
+          lockIcon.src = "https://izumiihd.github.io/pixelitcdn/assets/img/icons/lock.png";
+          lockIcon.alt = "Locked";
+          lockIcon.style.width = "32px"; 
+          lockIcon.style.height = "32px"; 
+          lockIcon.style.filter = "drop-shadow(2px 2px 4px #000000)"; 
+          itemDiv.style.cursor = 'pointer';
+      itemDiv.appendChild(lockIcon);
+}
+
 
       itemsDiv.appendChild(itemDiv);
     });
@@ -342,11 +346,14 @@ function sellBlook() {
             if (badge) {
               badge.textContent = newOwned;
             }
-            if (newOwned === 0) {
+          if (newOwned === 0) {
               itemDiv.innerHTML = "";
-              const lockIcon = document.createElement("i");
-              lockIcon.classList.add("fa-solid", "fa-lock", "fa-2xl");
-              lockIcon.style.textShadow = "2px 2px 4px #000000";
+              const lockIcon = document.createElement("img");
+              lockIcon.src = "https://izumiihd.github.io/pixelitcdn/assets/img/icons/lock.png";
+              lockIcon.alt = "Locked";
+              lockIcon.style.width = "32px";
+              lockIcon.style.height = "32px";
+              lockIcon.style.filter = "drop-shadow(2px 2px 4px #000000)";
               itemDiv.appendChild(lockIcon);
             }
           }
@@ -654,22 +661,24 @@ giftButton.addEventListener("click", () => {
               sellButton.style.display = newOwned <= 0 ? "none" : "block";
 
               const itemDivs = document.querySelectorAll(".item");
-              itemDivs.forEach(itemDiv => {
+              itemDivs.forEach(itemDiv => {       
                   if (itemDiv.querySelector("img")?.alt === blookName.textContent) {
                       const badge = itemDiv.querySelector(".badge");
                       if (badge) {
                           badge.textContent = newOwned; 
                       }
                       if (newOwned === 0) {
-                          itemDiv.innerHTML = ""; 
-                          const lockIcon = document.createElement("i");
-                          lockIcon.classList.add("fa-solid", "fa-lock", "fa-2xl");
-                          lockIcon.style.textShadow = "2px 2px 4px #000000";
-                          itemDiv.appendChild(lockIcon);
+                        itemDiv.innerHTML = "";
+                        const lockIcon = document.createElement("img");
+                        lockIcon.src = "https://izumiihd.github.io/pixelitcdn/assets/img/icons/lock.png";
+                        lockIcon.alt = "Locked";
+                        lockIcon.style.width = "32px";
+                        lockIcon.style.height = "32px";
+                        lockIcon.style.filter = "drop-shadow(2px 2px 4px #000000)";
+                        itemDiv.appendChild(lockIcon);
                       }
                   }
               });
-
               errorMessage.style.color = 'white';
               errorMessage.style.fontSize = '24px';
               errorMessage.textContent = `Successfully gifted ${blookName.textContent} to ${recipient}`; 
