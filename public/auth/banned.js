@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
         if (data.banned) {
-            window.location.href = '/login.html'; 
+            window.location.href = '/login'; 
         }
     })
     .catch(error => {

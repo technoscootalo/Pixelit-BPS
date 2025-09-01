@@ -8,10 +8,10 @@ window.onload = () => {
         document.body.style.pointerEvents = "auto";
         socket.emit("getrequests");
       } else {
-        window.location = "/site/dashboard.html";
+        window.location = "/dashboard";
       }
     });
   } else {
-    window.location = "/site/dashboard.html";
+    window.location = "/dashboard";
   }
 };

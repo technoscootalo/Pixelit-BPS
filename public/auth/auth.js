@@ -9,13 +9,13 @@ function checkLoggedIn() {
     .then(response => {
         if (!response.ok) {
             if (response.status === 401) {
-                window.location.href = '/login.html';
+                window.location.href = '/login';
             }
         }
     })
     .catch(error => {
         console.error("Error checking login status:", error);
-        window.location.href = '/login.html'; 
+        window.location.href = '/login'; 
     });
 }
 

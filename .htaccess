@@ -1,0 +1,7 @@
+RewriteEngine On
+# Unless it's an existing directory...
+RewriteCond %{REQUEST_FILENAME} !-d
+# ...and unless the file without the .html extension does not exist...
+RewriteCond %{REQUEST_FILENAME}\.html -f
+# ...internally rewrite the request to the file with the .html extension.
+RewriteRule ^([^/.]+)$ $1.html [L]
