@@ -540,6 +540,7 @@ function changeProfilePicture(blookName, imageUrl, packName) {
   };
 }
 
+/* 
 giftButton.addEventListener("click", () => {
     const modal = document.createElement('div');
     modal.classList.add('modal');
@@ -722,3 +723,4 @@ giftButton.addEventListener("click", () => {
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
 });
+*/
