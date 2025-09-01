@@ -6,25 +6,20 @@ function displayLeaderboard(users) {
         const userElement = document.createElement('div');
         userElement.className = 'leaderboard-item';
 
-        const roleColor = (user.role === 'Owner') ? '#020202' :
-              (user.role === 'Admin') ? '#dc6dc1' :
-              (user.role === 'Moderator') ? '#ab53c4' :
-              (user.role === 'Tester') ? '#80a1d3' :
-              (user.role === 'Helper') ? '#4b69c3' :
-              (user.role === 'Developer') ? '#6a76c7' :
-              (user.role === 'Artist') ? '#ca964c' :
-              (user.role === 'Verified') ? '#5ab65b' :
-              (user.role === 'Veteran') ? '#969a5c' : 'white';
+        const colorMap = {
+            Owner: '#020202',
+            Admin: '#dc6dc1',
+            Moderator: '#ab53c4',
+            Tester: '#80a1d3',
+            Helper: '#4b69c3',
+            Developer: '#6a76c7',
+            Artist: '#ca964c',
+            Verified: '#5ab65b',
+            Veteran: '#969a5c'
+        };
 
-        const usernameColor = (user.role === 'Owner') ? '#020202' :
-                  (user.role === 'Admin') ? '#dc6dc1' :
-                  (user.role === 'Moderator') ? '#ab53c4' :
-                  (user.role === 'Tester') ? '#80a1d3' :
-                  (user.role === 'Helper') ? '#4b69c3' :
-                  (user.role === 'Developer') ? '#6a76c7' :
-                  (user.role === 'Artist') ? '#ca964c' :
-                  (user.role === 'Verified') ? '#5ab65b' :
-                  (user.role === 'Veteran') ? '#969a5c' : 'white';
+        const roleColor = colorMap[user.role] || 'white';
+        const usernameColor = roleColor;
 
         userElement.innerHTML = `${index + 1}. <span style="color: ${roleColor}">[${user.role || 'Unknown'}]</span> <span style="color: ${usernameColor}; cursor: pointer;">${user.username || 'Unknown'}</span> - Tokens: <strong style="color: gold;">${user.tokens}</strong>`;
         leaderboardContainer.appendChild(userElement);
@@ -39,25 +34,20 @@ function displayTopSenders(topSenders) {
         const senderElement = document.createElement('div');
         senderElement.className = 'top-sender-item';
 
-        const roleColor = (sender.role === 'Owner') ? '#020202' :
-              (sender.role === 'Admin') ? '#dc6dc1' :
-              (sender.role === 'Moderator') ? '#ab53c4' :
-              (sender.role === 'Tester') ? '#80a1d3' :
-              (sender.role === 'Helper') ? '#4b69c3' :
-              (sender.role === 'Developer') ? '#6a76c7' :
-              (sender.role === 'Artist') ? '#ca964c' :
-              (sender.role === 'Verified') ? '#5ab65b' :
-              (sender.role === 'Veteran') ? '#969a5c' : 'white';
+        const colorMap = {
+            Owner: '#020202',
+            Admin: '#dc6dc1',
+            Moderator: '#ab53c4',
+            Tester: '#80a1d3',
+            Helper: '#4b69c3',
+            Developer: '#6a76c7',
+            Artist: '#ca964c',
+            Verified: '#5ab65b',
+            Veteran: '#969a5c'
+        };
 
-        const usernameColor = (sender.role === 'Owner') ? '#020202' :
-                  (sender.role === 'Admin') ? '#dc6dc1' :
-                  (sender.role === 'Moderator') ? '#ab53c4' :
-                  (sender.role === 'Tester') ? '#80a1d3' :
-                  (sender.role === 'Helper') ? '#4b69c3' :
-                  (sender.role === 'Developer') ? '#6a76c7' :
-                  (sender.role === 'Artist') ? '#ca964c' :
-                  (sender.role === 'Verified') ? '#5ab65b' :
-                  (sender.role === 'Veteran') ? '#969a5c' : 'white';
+        const roleColor = colorMap[sender.role] || 'white';
+        const usernameColor = roleColor;
 
         senderElement.innerHTML = `${index + 1}. <span style="color: ${roleColor}">[${sender.role || 'Unknown'}]</span> <span style="color: ${usernameColor}; cursor: pointer;">${sender.username || 'Unknown'}</span> - Messages: <strong style="color: gold;">${sender.sent}</strong>`;
         leaderboardContainer.appendChild(senderElement);
@@ -65,87 +55,100 @@ function displayTopSenders(topSenders) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetchLeaderboardData();
+    fetchLeaderboardData();
 
-  const backButton = document.getElementById('leaderboard-messages');
-  backButton.addEventListener('click', handleBackButtonClick);
+    const backButton = document.getElementById('leaderboard-messages');
+    backButton.addEventListener('click', handleBackButtonClick);
+
+    fetch('/user')
+        .then(response => response.json())
+        .then(data => {
+            const userRole = data.role;
+            const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
+            if (allowedRoles.includes(userRole)) {
+                document.getElementById('wrench-icon').style.display = 'inline';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching user role:', error);
+        });
 });
 
 let isCooldown = false;
 
 async function handleBackButtonClick() {
-  if (isCooldown) return;
-  isCooldown = true;
+    if (isCooldown) return;
+    isCooldown = true;
 
-  const backButton = document.getElementById('leaderboard-messages');
-  const leaderboardContainer = document.getElementById('leaderboardContainer');
+    const backButton = document.getElementById('leaderboard-messages');
+    const leaderboardContainer = document.getElementById('leaderboardContainer');
 
-  leaderboardContainer.innerHTML = '<div style="text-align: center;">Loading...</div>';
+    leaderboardContainer.innerHTML = '<div style="text-align: center;">Loading...</div>';
 
-  if (backButton.innerText === 'Tokens') {
-      backButton.innerText = 'Messages';
-      backButton.style.textAlign = 'center';
-      await fetchTopSenders();
-  } else {
-      backButton.innerText = 'Tokens';
-      backButton.style.textAlign = 'center';
-      await fetchLeaderboardData();
-  }
+    if (backButton.innerText === 'Tokens') {
+        backButton.innerText = 'Messages';
+        await fetchTopSenders();
+    } else {
+        backButton.innerText = 'Tokens';
+        await fetchLeaderboardData();
+    }
 
-  setTimeout(() => {
-      isCooldown = false;
-  }, 100)
+    setTimeout(() => {
+        isCooldown = false;
+    }, 100);
 }
 
 async function fetchLeaderboardData() {
-  try {
-      const response = await fetch('/leaderboard');
-      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    try {
+        const response = await fetch('/leaderboard');
 
-      const data = await response.json();
-      displayLeaderboard(data);
-  } catch (error) {
-      console.error('Error fetching leaderboard data:', error);
-  }
+        const contentType = response.headers.get("content-type");
+        if (!response.ok || !contentType || !contentType.includes("application/json")) {
+            const text = await response.text();
+            throw new Error(`Expected JSON but got: ${text}`);
+        }
+
+        const data = await response.json();
+        displayLeaderboard(data);
+    } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+        showErrorMessage("Failed to load leaderboard data.");
+    }
 }
 
 async function fetchTopSenders() {
-  try {
-      const response = await fetch('/top-senders');
-      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    try {
+        const response = await fetch('/top-senders');
 
-      const topSenders = await response.json();
-      displayTopSenders(topSenders);
-  } catch (error) {
-      console.error('Error fetching top senders:', error);
-  }
+        const contentType = response.headers.get("content-type");
+        if (!response.ok || !contentType || !contentType.includes("application/json")) {
+            const text = await response.text();
+            throw new Error(`Expected JSON but got: ${text}`);
+        }
+
+        const topSenders = await response.json();
+        displayTopSenders(topSenders);
+    } catch (error) {
+        console.error('Error fetching top senders:', error);
+        showErrorMessage("Failed to load top senders.");
+    }
+}
+
+function showErrorMessage(message) {
+    const leaderboardContainer = document.getElementById('leaderboardContainer');
+    leaderboardContainer.innerHTML = `<div style="color: red; text-align: center;">${message}</div>`;
 }
 
 function logout() {
-  fetch('/logout', { method: 'POST' })
-    .then(response => {
-      if (response.ok) {
-        sessionStorage.clear();
-        localStorage.removeItem('loggedIn');
-        window.location.href = '/';
-      } else {
-        console.error('Logout failed');
-      }
-    })
-    .catch(error => console.error('Error:', error));
+    fetch('/logout', { method: 'POST' })
+        .then(response => {
+            if (response.ok) {
+                sessionStorage.clear();
+                localStorage.removeItem('loggedIn');
+                window.location.href = '/';
+            } else {
+                console.error('Logout failed');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-  fetch('/user') 
-    .then(response => response.json())
-    .then(data => {
-      const userRole = data.role;
-      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
-      if (allowedRoles.includes(userRole)) {
-        document.getElementById('wrench-icon').style.display = 'inline';
-      }
-    })
-  .catch(error => {
-   console.error('Error fetching user role:', error);
-    });
-});
