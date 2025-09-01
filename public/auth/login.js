@@ -47,11 +47,11 @@ function login(event) {
   .then(({ status, body }) => {
     if (status === 200) {
       errorMsg.style.color = "lightgreen";
-      errorMsg.textContent = "Login successful! Redirecting...";
+      errorMsg.textContent = "Redirecting...";
       let dots = '';
       const intervalId = setInterval(() => {
         dots = dots.length < 3 ? dots + '.' : '';
-        errorMsg.textContent = "Login successful! Redirecting" + dots;
+        errorMsg.textContent = "Redirecting" + dots;
       }, 500);
 
       setTimeout(() => {

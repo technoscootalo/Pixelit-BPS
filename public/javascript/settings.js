@@ -460,7 +460,7 @@ document.getElementById('changeUsername').addEventListener('click', function() {
         });
 
         if (response.ok) {
-            window.location.href = '/login.html'; 
+            window.location.href = '/login'; 
         } else {
             const errorText = await response.text();
             document.getElementById('error-message').textContent = `Error: ${errorText}`;

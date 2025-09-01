@@ -35,7 +35,7 @@ fetch("/user", {
 .then((response) => {
     if (!response.ok) {
         if (response.status === 401) {
-            window.location.href = "/login.html"; 
+            window.location.href = "/login"; 
         } else {
             return response.text().then(text => {
                 throw new Error(`Network response was not ok: ${response.status} - ${text}`);
