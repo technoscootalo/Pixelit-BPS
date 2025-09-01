@@ -2,7 +2,7 @@ const express = require("express");
 require('dotenv').config();
 const CryptoJS = require("crypto-js");
 const stringifySafe = require("json-stringify-safe");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ServerMonitoringMode } = require("mongodb");
 const axios = require("axios");
 const path = require('path');
 const session = require("express-session");
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
 
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + "/home.");
 });
 
@@ -124,7 +124,7 @@ const router = require("./routes.js");
 app.use('/storeWebhook', express.raw({ type: 'application/json' }));
 app.use(router);
 
-const hostname = 'localhost';
+const host = '0.0.0.0';
 const port = process.env.PORT || 3000;
 
 const encpass = process.env["encpass"];
@@ -228,8 +228,8 @@ io.on("connection", async (socket) => {
   });
 });
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(port, host, () => {
+  console.log(`Server server running at http://${host}:${port}/`);
 });
 
 console.log("Initializing server...");
