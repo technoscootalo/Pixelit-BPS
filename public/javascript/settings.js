@@ -30,32 +30,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-async function fetchUserData() {
-    try {
-        const response = await fetch('/user');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        return null;
-    }
+function formatJoinDate(isoString) {
+  if (!isoString) return 'Unknown';
+  const date = new Date(isoString);
+  const options = {
+    year: "numeric",
+    month: "long", 
+    day: "numeric"
+  };
+  return date.toLocaleDateString("en-US", options);
 }
-
+async function fetchUserData() {
+  try {
+    const response = await fetch('/user');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
+  }
+}
 document.addEventListener("DOMContentLoaded", async function() {
   const usernameElement = document.getElementById("username");
   const roleElement = document.getElementById("role");
-  const idElement = document.getElementById("id");
   const uidElement = document.getElementById("uid");
-
-
+  const tokensElement = document.getElementById("tokens");
+  const joinDateElement = document.getElementById("date");
   const userData = await fetchUserData();
-
   if (userData) {
     if (usernameElement) {
       usernameElement.textContent = `Username: ${userData.username}`;
+    }
+    if (roleElement) {
+      roleElement.textContent = `Role: ${userData.role}`;
+    }
+    if (joinDateElement) {
+      joinDateElement.innerHTML = `Joined: ${formatJoinDate(userData.joinDate)}`;
     }
     if (uidElement) {
       uidElement.textContent = `UID: ${userData.uid}`;
@@ -63,6 +73,12 @@ document.addEventListener("DOMContentLoaded", async function() {
   } else {
     if (usernameElement) {
       usernameElement.textContent = `Username: Unavailable`;
+    }
+    if (roleElement) {
+      roleElement.textContent = `Role: Unavailable`;
+    }
+    if (joinDateElement) {
+      joinDateElement.innerHTML = `Joined: Unknown`;
     }
     if (uidElement) {
       uidElement.textContent = `UID: Unavailable`;

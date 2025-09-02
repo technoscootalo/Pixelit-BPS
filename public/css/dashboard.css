@@ -121,7 +121,6 @@ body {
   height: 120px;
   display: block;
   margin-left: 0%;
-  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
 }
 
 @media screen and (max-width: 600px) {
@@ -136,7 +135,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -100%);
-  font-size: 24px;
+  font-size: 28px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -198,7 +197,7 @@ body {
   border: none;
   padding: 15px 30px;
   cursor: pointer;
-  box-shadow: inset 0 -0.365vw #943c1e, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 -0.265vw #943c1e, 3px 3px 15px rgba(0, 0, 0, 0.6);
   font-family: Pixelify Sans;
   pointer-events: auto;
 }
@@ -223,7 +222,7 @@ body {
   border: none;
   padding: 15px 30px;
   cursor: pointer;
-  box-shadow: inset 0 -0.365vw rgb(169, 107, 20), 3px 3px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 -0.265vw rgb(169, 107, 20), 3px 3px 15px rgba(0, 0, 0, 0.6);
   font-family: Pixelify Sans;
   pointer-events: auto;
   transition: box-shadow 0.3s ease-in-out;
@@ -253,7 +252,7 @@ body {
   padding: 15px 30px;
   cursor: pointer;
   background-color: green;
-  box-shadow: inset 0 -0.365vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 -0.265vw #006400, 3px 3px 15px rgba(0, 0, 0, 0.6);
   font-family: Pixelify Sans;
   pointer-events: auto;
   transition: box-shadow 0.3s ease-in-out;
@@ -274,7 +273,7 @@ body {
 
 .manageBlooks {
   background-color: rgb(30, 146, 255);
-  box-shadow: inset 0 -0.365vw rgb(18, 76, 130), 3px 3px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 -0.265vw rgb(18, 76, 130), 3px 3px 15px rgba(0, 0, 0, 0.6);
   transition: box-shadow 0.3s ease-in-out;
 }
 

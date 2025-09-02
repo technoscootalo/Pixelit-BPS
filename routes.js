@@ -272,6 +272,7 @@ router.post("/addAccount", async (req, res) => {
             banDuration: 0,
             muteDuration: 0,
             notifications: [],
+            joinDate: new Date().toISOString(),
          });
         }
         try {

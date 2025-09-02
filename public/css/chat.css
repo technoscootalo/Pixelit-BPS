@@ -134,6 +134,7 @@ body {
   border-right: none;
   border: none;
   font-family: 'Pixelify Sans';
+  color: grey;
 }
 
 .sendInput{
@@ -147,7 +148,6 @@ body {
   color: #fff !important;
   font-family: 'Pixelify Sans';
   padding: 20px;
-  box-shadow: 2px 2px 5px rgb(255, 255, 255, 0.3);
   border-radius: 0px;
   overflow: hidden;
   display: flex;
