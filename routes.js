@@ -2,7 +2,7 @@ const path = require('path');
 require('dotenv').config();
 const express = require("express");
 const router = express.Router();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, Timestamp } = require("mongodb");
 const { ObjectId } = require("mongodb");
 const uri = process.env.mongoURL;
 const crypto = require("crypto");
@@ -147,6 +147,9 @@ router.post("/login", async (req, res) => {
         req.session.claimed = user.claimed;
         req.session.banner = user.banner;
         req.session.badges = user.badges;
+
+        await sendLoginWebhook(user.username);
+
         res.sendStatus(200);
       } else {
         res.status(401).send("Username or Password is incorrect!");
@@ -159,6 +162,26 @@ router.post("/login", async (req, res) => {
     res.status(500).send("Server error!");
   }
 });
+
+async function sendLoginWebhook(username) {
+  const webhookUrl = process.env.webhookUrl;
+
+  const payload = {
+    content: `${username} has logged into pixelit.`
+  };
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (error) {
+    console.error('Error sending Discord webhook:', error);
+  }
+}
 
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
