@@ -184,15 +184,43 @@ async function sendLoginWebhook(username) {
 }
 
 router.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
+  const username = req.session.username;
+  req.session.destroy(async (err) => {
     if (err) {
       console.error("Error destroying session:", err);
       res.status(500).send("Error logging out");
     } else {
+      await sendLogoutWebhook(username);
       res.sendStatus(200);
     }
   });
 });
+
+async function sendLogoutWebhook(username) {
+  const webhookUrl = process.env.webhookUrl;
+
+  if (!webhookUrl) {
+    console.log('Discord webhook URL not configured, skipping logout webhook');
+    return;
+  }
+
+  const payload = {
+    content: `${username} has logged out of pixelit.`
+  };
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+    console.log(`Discord logout webhook sent for user: ${username}`);
+  } catch (error) {
+    console.error('Error sending Discord logout webhook:', error);
+  }
+}
 
 router.post("/register", limiter, async (req, res) => {
   try {
