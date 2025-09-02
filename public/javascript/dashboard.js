@@ -111,6 +111,10 @@ fetch("/user")
       ge("role").style.color = "#5ab65b";
 
     }
+    if (user.role === "Plus") {
+      usernameElement.style.color = "#5657d3";
+      ge("role").style.color = "#5657d3";
+    }
     if (user.role === "Tester") {
       usernameElement.style.color = "#80a1d3";
       ge("role").style.color = "#80a1d3";
