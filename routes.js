@@ -1119,14 +1119,14 @@ router.post('/checkUser', async (req, res) => {
 });
 
 router.post("/giftBlook", async (req, res) => {
-  const { recipient, name, rarity } = req.body; 
+  const { recipient, name, rarity } = req.body;
 
   if (!req.session || !req.session.loggedIn) {
     return res.status(401).json({ success: false, message: "You must be logged in to gift a blook." });
   }
 
   if (req.session.username === recipient) {
-    return res.status(400).json({ success: false, message: "You cannot gift blooks to yourself." }); 
+    return res.status(400).json({ success: false, message: "You cannot gift blooks to yourself." });
   }
 
   try {
@@ -1137,19 +1137,40 @@ router.post("/giftBlook", async (req, res) => {
       return res.status(404).json({ success: false, message: "This user does not exist." });
     }
 
-    const blook = senderUser.packs.flatMap(pack => pack.blooks).find(b => b.name === name);
+    const senderBlook = senderUser.packs.flatMap(pack => pack.blooks).find(b => b.name === name);
 
-    if (!blook || blook.owned < 1) {
+    if (!senderBlook || senderBlook.owned < 1) {
       return res.status(400).json({ success: false, message: "You don't own this blook." });
     }
 
-    blook.owned -= 1;
+    senderBlook.owned -= 1;
 
     await users.updateOne({ username: req.session.username }, { $set: { packs: senderUser.packs } });
 
+    let recipientBlook = recipientUser.packs
+      .flatMap(pack => pack.blooks)
+      .find(b => b.name === name);
+
+    if (recipientBlook) {
+      recipientBlook.owned += 1;
+    } else {
+      let pack = recipientUser.packs.find(p => p.rarity === rarity);
+
+      if (!pack) {
+        pack = { rarity: rarity, blooks: [] };
+        recipientUser.packs.push(pack);
+      }
+
+      pack.blooks.push({ name: name, owned: 1 });
+    }
+
     const notificationMessage = `${req.session.username} has gifted you ${name} on ${new Date().toLocaleDateString()}`;
     recipientUser.notifications.push({ message: notificationMessage, date: new Date() });
-    await users.updateOne({ username: recipient }, { $set: { notifications: recipientUser.notifications } });
+
+    await users.updateOne(
+      { username: recipient },
+      { $set: { packs: recipientUser.packs, notifications: recipientUser.notifications } }
+    );
 
     res.json({ success: true, message: `Successfully gifted ${name} to ${recipient}.` });
   } catch (error) {
@@ -1158,28 +1179,6 @@ router.post("/giftBlook", async (req, res) => {
   }
 });
 
-app.use(bodyParser.json());
-
-app.post('/sendNotification', async (req, res) => {
-    if (!req.session || !req.session.loggedIn) {
-      return res.status(401).json({ success: false, message: "You must be logged in to send notifications." });
-    }
-  
-    const { message } = req.body;
-    if (!message) {
-        return res.status(400).json({ success: false, message: "Notification message is required." });
-    }
-    try {
-        const allUsers = await users.find().toArray();
-        for (const user of allUsers) {
-            user.notifications.push({ message, date: new Date() });
-            await users.updateOne({ username: user.username }, { $set: { notifications: user.notifications } });
-        }
-        return res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
 
 router.get("/getNotifications", async (req, res) => {
   if (!req.session || !req.session.loggedIn) {

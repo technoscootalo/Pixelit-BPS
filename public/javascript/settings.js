@@ -64,9 +64,9 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (roleElement) {
       roleElement.textContent = `Role: ${userData.role}`;
     }
-    if (joinDateElement) {
-      joinDateElement.innerHTML = `Joined: ${formatJoinDate(userData.joinDate)}`;
-    }
+///    if (joinDateElement) {
+///      joinDateElement.innerHTML = `Joined: ${formatJoinDate(userData.joinDate)}`;
+///    }
     if (uidElement) {
       uidElement.textContent = `UID: ${userData.uid}`;
     }
