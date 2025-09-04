@@ -199,11 +199,6 @@ router.post("/logout", (req, res) => {
 async function sendLogoutWebhook(username) {
   const webhookUrl = process.env.webhookUrl;
 
-  if (!webhookUrl) {
-    console.log('Discord webhook URL not configured, skipping logout webhook');
-    return;
-  }
-
   const payload = {
     content: `${username} has logged out of pixelit.`
   };
@@ -216,7 +211,6 @@ async function sendLogoutWebhook(username) {
       },
       body: JSON.stringify(payload)
     });
-    console.log(`Discord logout webhook sent for user: ${username}`);
   } catch (error) {
     console.error('Error sending Discord logout webhook:', error);
   }
@@ -259,29 +253,38 @@ router.post("/register", limiter, async (req, res) => {
 });
 
 router.get("/requests", async (req, res) => {
-  if (req.session.loggedIn) {
-    
-    const db = client.db(db_name);
-    const collection = db.collection("users");
-    const user = await collection.findOne({ username: req.session.username });
-    
-    if (user) {
-      if (["Owner", "Admin", "Moderator", "Helper", "Developer"].includes(user.role)) {
-        const requests = await client
-          .db(db_name)
-          .collection("requests")
-          .find()
-          .toArray();
-        res.status(200).send(requests);
-      } else {
-        res.status(500).send("You're not a staff member");
-      }
-    } else {
-      res.status(500).send("The account your under does not exist");
-    }
-  } else {
-    res.status(500).send("You're not logged in");
+  if (!req.session.loggedIn) {
+    return res.status(403).send("You're not logged in");
   }
+
+  const db = client.db(db_name);
+  const collection = db.collection("users");
+  const user = await collection.findOne({ username: req.session.username });
+
+  if (!user) {
+    return res.status(403).send("The account you're under does not exist");
+  }
+
+  if (!["Owner", "Admin", "Moderator", "Helper", "Developer"].includes(user.role)) {
+    return res.status(403).send("You're not a staff member");
+  }
+
+  const isApiRequest =
+    req.xhr ||
+    req.headers.accept?.includes("application/json") ||
+    req.headers["sec-fetch-mode"] === "cors";
+
+  if (!isApiRequest) {
+    return res.status(204).send(); 
+  }
+
+  const requests = await client
+    .db(db_name)
+    .collection("requests")
+    .find()
+    .toArray();
+
+  res.status(200).json(requests);
 });
 
 router.post("/addAccount", async (req, res) => {
@@ -373,28 +376,56 @@ router.post("/changePassword", async (req, res) => {
 
 router.get("/packs", async (req, res) => {
   if (!req.session.loggedIn) {
-    res.status(500).send("You must be logged in to access this page.");
-    return;
+    return res.status(403).send("You must be logged in to access this page.");
   }
-  const db = client.db(db_name);
-  const collection = db.collection("packs");
-  const packs = await collection.find().toArray();
-  res.status(200).send(packs);
+
+  const isApiRequest =
+    req.xhr ||
+    req.headers.accept?.includes("application/json") ||
+    req.headers["sec-fetch-mode"] === "cors";
+
+  if (!isApiRequest) {
+    return res.status(204).send();
+  }
+
+  try {
+    const db = client.db(db_name);
+    const collection = db.collection("packs");
+    const packs = await collection.find().toArray();
+    res.status(200).json(packs);
+  } catch (err) {
+    console.error("Error fetching packs:", err);
+    res.status(500).send("Internal server error");
+  }
 });
+
 
 router.get("/users", async (req, res) => {
   const session = req.session;
+
   if (!(session && session.loggedIn)) {
-    res.status(500).send("You must be logged in");
-    return;
+    return res.status(403).send("You must be logged in");
   }
+
+  const isApiRequest =
+    req.xhr ||
+    req.headers.accept?.includes("application/json") ||
+    req.headers["sec-fetch-mode"] === "cors";
+
+  if (!isApiRequest) {
+    return res.status(204).send();
+  }
+
   const users2 = await users.find().toArray();
+
   users2.forEach((user) => {
     delete user.password;
     delete user.salt;
   });
-  res.status(200).send({ users: users2 });
+
+  res.status(200).json({ users: users2 });
 });
+
 
 router.post("/addPack", async (req, res) => {
   const session = req.session;
@@ -570,6 +601,15 @@ router.post("/removeBlook", async (req, res) => {
 });
 
 router.get("/getAccounts", async (req, res) => {
+  const isApiRequest =
+    req.xhr ||
+    req.headers.accept?.includes("application/json") ||
+    req.headers["sec-fetch-mode"] === "cors";
+
+  if (!isApiRequest) {
+    return res.status(204).send();
+  }
+
   try {
     const usersList = await users.find().toArray();
     res.status(200).json(usersList);
@@ -707,6 +747,15 @@ router.get("/user", async (req, res) => {
 });
 
 router.get("/packs", async (req, res) => {
+  const isApiRequest =
+    req.xhr ||
+    req.headers.accept?.includes("application/json") ||
+    req.headers["sec-fetch-mode"] === "cors";
+
+  if (!isApiRequest) {
+    return res.status(204).send(); 
+  }
+
   try {
     const allPacks = await packs.find().toArray();
     res.status(200).json(allPacks);
@@ -715,6 +764,7 @@ router.get("/packs", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+
 
 router.get("/openPack", packOpenLimiter, async (req, res) => {
     const session = req.session;

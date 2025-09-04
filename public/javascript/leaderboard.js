@@ -15,7 +15,8 @@ function displayLeaderboard(users) {
           Developer: '#6a76c7',
           Artist: '#ca964c',
           Verified: '#5ab65b',
-          Veteran: '#969a5c'
+          Veteran: '#969a5c',
+          Plus: '#5657d3'
       };
 
       const roleColor = colorMap[user.role] || 'white';
@@ -43,7 +44,8 @@ function displayTopSenders(topSenders) {
           Developer: '#6a76c7',
           Artist: '#ca964c',
           Verified: '#5ab65b',
-          Veteran: '#969a5c'
+          Veteran: '#969a5c',
+          Plus: '#5657d3'
       };
 
       const roleColor = colorMap[sender.role] || 'white';
