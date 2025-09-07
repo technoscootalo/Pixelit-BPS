@@ -1,7 +1,7 @@
 {
   "name": "pixelit",
-  "version": "2.2.4",
-  "description": "The very first Blooket private server with pixel art blooks and badges!",
+  "version": "2.2.5",
+  "description": "The very first Blooket private server with pixels. Programmed primarily in JavaScript. Created by IzumiiHD and Iamgamedude!",
   "main": "server.js",
   "dependencies": {
     "axios": "^1.7.3",
@@ -26,6 +26,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "IzumiiHD",
+  "author": "IzumiiHD, Iamgamedude",
   "license": "ISC"
 }
