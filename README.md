@@ -8,11 +8,12 @@ The very first Blooket private server with pixels. Programmed primarily in JavaS
 
 # Contributers
 
-- SOUNDGOD
-- ThatPlanet
 - Packman28
-- FastyJay
-- RedXbox
+- SOUNDGOD
+- Buenar
+- Dylan
 - Lemon
 - Prq
 - Hjr
+- FastyJay
+- FrostyIce109
