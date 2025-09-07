@@ -265,7 +265,7 @@ router.get("/requests", async (req, res) => {
     return res.status(403).send("The account you're under does not exist");
   }
 
-  if (!["Owner", "Admin", "Moderator", "Helper", "Developer"].includes(user.role)) {
+  if (!["Owner", "Admin", "Community Manager", "Moderator", "Helper", "Developer"].includes(user.role)) {
     return res.status(403).send("You're not a staff member");
   }
 
@@ -300,7 +300,7 @@ router.post("/addAccount", async (req, res) => {
   const person = await users.findOne({ username: req.session.username });
   if (
     person &&
-    ["Owner", "Admin", "Moderator", "Helper", "Developer"].includes(person.role)
+    ["Owner", "Admin", "Community Manager", "Moderator", "Helper", "Developer"].includes(person.role)
   ) {
     const request = await userRequests.findOne({ username: req.body.username });
     if (req.body.accepted) {
@@ -845,7 +845,7 @@ router.post("/muteBanUser", async (req, res) => {
         }
 
         if (action === "mute") {
-            if (user && ["Owner", "Developer", "Moderator", "Admin", "Helper"].includes(user.role)) {
+            if (user && ["Owner", "Developer", "Community Manager", "Moderator", "Admin", "Helper"].includes(user.role)) {
                 await users.updateOne(
                     { username },
                     { 
@@ -879,7 +879,7 @@ router.post("/muteBanUser", async (req, res) => {
         }
 
         if (action === "ban") {
-            if (user && ["Owner", "Developer", "Admin", "Moderator"].includes(user.role)) {
+            if (user && ["Owner", "Developer", "Admin", "Community Manager", "Moderator"].includes(user.role)) {
                 await users.updateOne(
                     { username },
                     { 
@@ -930,7 +930,7 @@ router.post("/unmuteUnbanUser", async (req, res) => {
         }
 
         if (action === "unmute") {
-            if (user && ["Owner", "Developer", "Moderator", "Admin", "Helper"].includes(user.role)) {
+            if (user && ["Owner", "Developer", "Moderator", "Admin", "Community Manager", "Helper"].includes(user.role)) {
                 await users.updateOne(
                     { username },
                     { 
@@ -948,7 +948,7 @@ router.post("/unmuteUnbanUser", async (req, res) => {
         }
 
         if (action === "unban") {
-            if (user && ["Owner", "Developer", "Admin", "Moderator"].includes(user.role)) {
+            if (user && ["Owner", "Developer", "Admin", "Community Manager", "Moderator"].includes(user.role)) {
                 await users.updateOne(
                     { username },
                     { 

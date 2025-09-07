@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
       const userRole = data.role;
-      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
+      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer', 'Community Manager'];
       if (allowedRoles.includes(userRole)) {
         document.getElementById('wrench-icon').style.display = 'inline';
       }

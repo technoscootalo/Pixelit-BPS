@@ -135,6 +135,10 @@ fetch("/user")
       ge("role").style.color = "#dc6dc1";
 
     }
+    if (user.role === "Community Manager") {
+      usernameElement.style.color = "#69c95d";
+      ge("role").style.color = "#69c95d";
+    }
     if (user.role === "Developer") {
       usernameElement.style.color = "#6a76c7";
       ge("role").style.color = "#6a76c7";
@@ -175,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
       const userRole = data.role;
-      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
+      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer', 'Community Manager'];
       if (allowedRoles.includes(userRole)) {
         document.getElementById('wrench-icon').style.display = 'inline';
       }

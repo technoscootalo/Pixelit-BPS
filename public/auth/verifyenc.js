@@ -19,7 +19,7 @@ window.onload = () => {
     }
   })
   .then(data => {
-    if (['Owner', 'Admin', 'Moderator' , 'Helper', 'Developer'].includes(data.role)) {
+    if (['Owner', 'Admin', 'Moderator' , 'Helper', 'Developer', 'Community Manager'].includes(data.role)) {
       document.getElementById("overlay").style.display = "none";
       document.body.style.pointerEvents = "auto";
     } else {

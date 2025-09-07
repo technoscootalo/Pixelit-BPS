@@ -377,16 +377,20 @@ function sellBlook() {
 
 sellButton.addEventListener('click', sellBlook);
 
-function checkUserRole() {
-  fetchJSON('/user')
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('/user') 
+    .then(response => response.json())
     .then(data => {
-      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
-      if (allowedRoles.includes(data.role)) {
+      const userRole = data.role;
+      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer', 'Community Manager'];
+      if (allowedRoles.includes(userRole)) {
         document.getElementById('wrench-icon').style.display = 'inline';
       }
     })
-    .catch(error => console.error('Error fetching user role:', error));
-}
+  .catch(error => {
+   console.error('Error fetching user role:', error);
+    });
+});
 
 window.onload = () => {
   if (localStorage.loggedin === "true") {

@@ -2,17 +2,19 @@ if (localStorage.loggedin == "true") {
   sessionStorage = localStorage;
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
-    const userData = await fetchUserData();
-
-    if (userData) {
-        const userRole = userData.role;
-        const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
-        
-        if (allowedRoles.includes(userRole)) {
-            document.getElementById('wrench-icon').style.display = 'inline';
-        }
-    }
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('/user') 
+    .then(response => response.json())
+    .then(data => {
+      const userRole = data.role;
+      const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer', 'Community Manager'];
+      if (allowedRoles.includes(userRole)) {
+        document.getElementById('wrench-icon').style.display = 'inline';
+      }
+    })
+  .catch(error => {
+   console.error('Error fetching user role:', error);
+    });
 });
 
 if (localStorage.loggedin == "true") {

@@ -8,6 +8,7 @@ function displayLeaderboard(users) {
 
       const colorMap = {
           Owner: '#020202',
+          CommunityManager: '#69c95d',
           Admin: '#dc6dc1',
           Moderator: '#ab53c4',
           Tester: '#80a1d3',
@@ -37,6 +38,7 @@ function displayTopSenders(topSenders) {
 
       const colorMap = {
           Owner: '#020202',
+          CommunityManager: '#69c95d',
           Admin: '#dc6dc1',
           Moderator: '#ab53c4',
           Tester: '#80a1d3',
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
           const userRole = data.role;
-          const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer'];
+          const allowedRoles = ['Owner', 'Admin', 'Moderator', 'Helper', 'Developer', 'Community Manager'];
           if (allowedRoles.includes(userRole)) {
               document.getElementById('wrench-icon').style.display = 'inline';
           }
