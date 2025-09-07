@@ -1,5 +1,7 @@
 node_modules/
+.config/.semgrep
 .env
 .breakpoints
 .config
 .htaccess
+.vscode/
