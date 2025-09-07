@@ -8,7 +8,7 @@ function displayLeaderboard(users) {
 
       const colorMap = {
           Owner: '#020202',
-          CommunityManager: '#69c95d',
+          "Community Manager": '#69c95d',
           Admin: '#dc6dc1',
           Moderator: '#ab53c4',
           Tester: '#80a1d3',
@@ -38,7 +38,7 @@ function displayTopSenders(topSenders) {
 
       const colorMap = {
           Owner: '#020202',
-          CommunityManager: '#69c95d',
+          "Community Manager" : '#69c95d',
           Admin: '#dc6dc1',
           Moderator: '#ab53c4',
           Tester: '#80a1d3',
@@ -104,7 +104,7 @@ async function handleBackButtonClick() {
 
 async function fetchLeaderboardData() {
   try {
-      const response = await fetch('/leaderboard');
+      const response = await fetch('/api/leaderboard');
 
       const contentType = response.headers.get("content-type");
       if (!response.ok || !contentType || !contentType.includes("application/json")) {
@@ -122,7 +122,7 @@ async function fetchLeaderboardData() {
 
 async function fetchTopSenders() {
   try {
-      const response = await fetch('/top-senders');
+      const response = await fetch('/api/top-senders');
 
       const contentType = response.headers.get("content-type");
       if (!response.ok || !contentType || !contentType.includes("application/json")) {

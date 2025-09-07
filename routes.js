@@ -972,27 +972,30 @@ router.post("/unmuteUnbanUser", async (req, res) => {
     }
 });
 
-router.get("/leaderboard", async (req, res) => {
-  try {
-      const usersList = await users.find().toArray();
+router.get("/api/leaderboard", async (req, res) => {
+    try {
+        const usersList = await users.find().toArray();
 
-      const leaderboard = usersList
-          .map(user => ({
-              username: user.username || 'Unknown',
-              role: user.role || 'Unknown',
-              tokens: user.tokens || 0
-          }))
+        console.log(`Fetched ${usersList.length} users from database`);
+
+        const leaderboard = usersList
+            .filter(user => user && !isNaN(Number(user.tokens)))
+            .map(user => ({
+                username: user.username || 'Unknown',
+                role: user.role || 'Unknown',
+                tokens: Number(user.tokens) || 0
+            }))
             .sort((a, b) => b.tokens - a.tokens)
             .slice(0, 10);
 
         res.status(200).json(leaderboard);
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
-        res.status(500).json({ error: "Internal Server Error" }); 
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-router.get("/top-senders", async (req, res) => {
+router.get("/api/top-senders", async (req, res) => {
     try {
         const usersList = await users.find().toArray();
         const topSenders = usersList
