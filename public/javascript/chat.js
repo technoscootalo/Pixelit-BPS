@@ -345,3 +345,6 @@ function logout() {
     })
     .catch(error => console.error('Error:', error));
 }
+
+window.openModal = openModal;
+window.closeModal = closeModal;
